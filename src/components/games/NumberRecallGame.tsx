@@ -11,7 +11,7 @@ interface NumberRecallGameProps {
 
 export const NumberRecallGame: React.FC<NumberRecallGameProps> = ({ onBack, onGameComplete }) => {
   const { user } = useAuth();
-  const { speakText } = useAccessibility();
+  const { speakText, t } = useAccessibility();
 
   const difficulty = user?.cognitiveDifficulty || 'easy';
   const digitCount = difficulty === 'hard' ? 5 : difficulty === 'medium' ? 4 : 3;
@@ -35,7 +35,7 @@ export const NumberRecallGame: React.FC<NumberRecallGameProps> = ({ onBack, onGa
     setPhase('memorize');
 
     const spoken = digits.join(', ');
-    speakText(`Remember these numbers: ${spoken}`);
+    speakText(`${t('rememberTheseNumbers')}: ${spoken}`);
   };
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export const NumberRecallGame: React.FC<NumberRecallGameProps> = ({ onBack, onGa
   const handleStartRecall = () => {
     setPhase('recall');
     setStartTime(Date.now());
-    speakText('Now enter the numbers you saw.');
+    speakText(t('nowEnterNumbers'));
   };
 
   const handleKeypadPress = (num: number) => {
@@ -67,9 +67,9 @@ export const NumberRecallGame: React.FC<NumberRecallGameProps> = ({ onBack, onGa
     setPhase('result');
 
     if (correct) {
-      speakText('Excellent! Every digit matched perfectly.');
+      speakText(t('brilliantCorrect'));
     } else {
-      speakText(`Nice try. The numbers were ${sequence.join(', ')}.`);
+      speakText(`${t('goodEffort')} ${sequence.join(', ')}.`);
     }
 
     try {
@@ -105,15 +105,15 @@ export const NumberRecallGame: React.FC<NumberRecallGameProps> = ({ onBack, onGa
           className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm cursor-pointer transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back</span>
+          <span>{t('backToHub')}</span>
         </button>
 
         <div className="flex items-center gap-3">
           <div className="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-sm font-bold text-slate-700">
-            Round {round} of {maxRounds}
+            {round} / {maxRounds}
           </div>
           <div className="bg-purple-50 border border-purple-200 px-3 py-1.5 rounded-xl text-sm font-bold text-purple-800 capitalize">
-            Level: {difficulty}
+            {t('level')}: {t(difficulty) || difficulty}
           </div>
         </div>
 
@@ -122,7 +122,7 @@ export const NumberRecallGame: React.FC<NumberRecallGameProps> = ({ onBack, onGa
           className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-800 font-bold text-sm cursor-pointer transition-colors"
         >
           <RefreshCw className="w-4 h-4" />
-          <span>Restart</span>
+          <span>{t('restart')}</span>
         </button>
       </div>
 
@@ -131,13 +131,13 @@ export const NumberRecallGame: React.FC<NumberRecallGameProps> = ({ onBack, onGa
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm text-center space-y-6">
           <div className="space-y-2">
             <span className="inline-flex items-center gap-1.5 bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-              <Eye className="w-4 h-4" /> Memorize Digits
+              <Eye className="w-4 h-4" /> {t('numberRecall')}
             </span>
             <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-              Remember this number sequence
+              {t('rememberTheseNumbers')}
             </h3>
             <p className="text-slate-600 text-base">
-              Look closely or listen to the voice. Press Ready when you have them memorized.
+              {t('readyToRecall')}
             </p>
           </div>
 
@@ -155,11 +155,11 @@ export const NumberRecallGame: React.FC<NumberRecallGameProps> = ({ onBack, onGa
 
           <div className="flex items-center justify-center gap-4">
             <button
-              onClick={() => speakText(`The numbers are: ${sequence.join(', ')}`)}
+              onClick={() => speakText(`${t('rememberTheseNumbers')}: ${sequence.join(', ')}`)}
               className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold text-sm transition-colors cursor-pointer"
             >
               <Volume2 className="w-4 h-4" />
-              <span>Hear Numbers Again</span>
+              <span>{t('listenAloud')}</span>
             </button>
 
             <button
@@ -167,7 +167,7 @@ export const NumberRecallGame: React.FC<NumberRecallGameProps> = ({ onBack, onGa
               onClick={handleStartRecall}
               className="px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-base rounded-2xl shadow-md cursor-pointer transition-all hover:scale-[1.02]"
             >
-              I am Ready! →
+              {t('beginRecall')} →
             </button>
           </div>
         </div>
@@ -178,10 +178,10 @@ export const NumberRecallGame: React.FC<NumberRecallGameProps> = ({ onBack, onGa
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm text-center space-y-6">
           <div className="space-y-1">
             <h3 className="text-2xl font-extrabold text-slate-900">
-              Enter the numbers you remember
+              {t('nowEnterNumbers')}
             </h3>
             <p className="text-slate-600 text-sm">
-              Use the large buttons below to type the {digitCount} digits.
+              {t('auditoryWorkingMemory')}
             </p>
           </div>
 
@@ -230,10 +230,10 @@ export const NumberRecallGame: React.FC<NumberRecallGameProps> = ({ onBack, onGa
                 <button
                   onClick={handleBackspace}
                   className="h-16 rounded-2xl bg-slate-200 hover:bg-slate-300 text-slate-800 text-sm font-bold flex items-center justify-center gap-1 transition-colors cursor-pointer"
-                  title="Erase Last Digit"
+                  title={t('clear')}
                 >
                   <Delete className="w-5 h-5" />
-                  <span>Erase</span>
+                  <span>{t('clear')}</span>
                 </button>
 
                 <button
@@ -253,7 +253,7 @@ export const NumberRecallGame: React.FC<NumberRecallGameProps> = ({ onBack, onGa
                       : 'bg-slate-200 text-slate-400 cursor-not-allowed'
                   }`}
                 >
-                  Check
+                  {t('checkAnswer')}
                 </button>
               </div>
             </div>
@@ -272,11 +272,11 @@ export const NumberRecallGame: React.FC<NumberRecallGameProps> = ({ onBack, onGa
                 {isCorrect ? (
                   <>
                     <CheckCircle2 className="w-6 h-6 text-emerald-600" />
-                    <span>Wonderful! You recalled the exact sequence.</span>
+                    <span>{t('brilliantCorrect')}</span>
                   </>
                 ) : (
                   <div>
-                    <span>Good try! The numbers were </span>
+                    <span>{t('goodEffort')} </span>
                     <span className="font-black underline">{sequence.join(' - ')}</span>
                   </div>
                 )}
@@ -287,7 +287,7 @@ export const NumberRecallGame: React.FC<NumberRecallGameProps> = ({ onBack, onGa
                 onClick={handleNext}
                 className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-2xl shadow-sm cursor-pointer transition-colors"
               >
-                {round < maxRounds ? 'Next Number Round →' : 'Complete Exercise'}
+                {round < maxRounds ? `${t('nextRound')} →` : t('completeExercise')}
               </button>
             </div>
           )}

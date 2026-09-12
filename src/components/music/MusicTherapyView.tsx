@@ -419,23 +419,25 @@ export const MusicTherapyView: React.FC<MusicTherapyViewProps> = ({ onBack, pati
             }`}
           >
             <Headphones className="w-6 h-6 text-teal-700" />
-            <span>Song Library & Playlists</span>
+            <span>{t('songLibraryPlaylists')}</span>
           </h3>
 
           <span className="text-xs sm:text-sm font-bold text-slate-500">
-            Showing {filteredSongs.length} comfort songs
+            {filteredSongs.length} {t('showingComfortSongs')}
           </span>
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
           {[
             { id: 'all', label: t('allSongs'), icon: '🎶' },
+            { id: 'bollywood', label: t('bollywoodClassics'), icon: '🪷' },
+            { id: 'northeast', label: t('northEastSongs'), icon: '🏔️' },
             { id: 'classical', label: t('classicalPiano'), icon: '🎹' },
             { id: 'nostalgia', label: t('goldenOldies'), icon: '📻' },
             { id: 'nature', label: t('natureSounds'), icon: '🌿' },
             { id: 'ambient', label: t('ambientComfort'), icon: '🕯️' },
             { id: 'custom', label: t('myUploadedSongs'), icon: '⭐' },
-            { id: 'favorites', label: 'My Favorites', icon: '❤️' },
+            { id: 'favorites', label: t('myFavorites'), icon: '❤️' },
           ].map((cat) => (
             <button
               key={cat.id}
@@ -460,9 +462,9 @@ export const MusicTherapyView: React.FC<MusicTherapyViewProps> = ({ onBack, pati
             <Music className="w-8 h-8" />
           </div>
           <div>
-            <h4 className="font-extrabold text-lg text-slate-900">No songs found in this category</h4>
+            <h4 className="font-extrabold text-lg text-slate-900">{t('noSongsInCategory')}</h4>
             <p className="text-slate-500 text-sm mt-1">
-              Add any song of your choice using the button below or choose another category.
+              {t('addSongPrompt')}
             </p>
           </div>
           <button
@@ -576,7 +578,7 @@ export const MusicTherapyView: React.FC<MusicTherapyViewProps> = ({ onBack, pati
                     <button
                       onClick={(e) => handleReadStory(song, e)}
                       className="p-1.5 rounded-lg text-slate-500 hover:text-teal-700 hover:bg-teal-50 transition-colors cursor-pointer"
-                      title="Read Story"
+                      title={t('readStory')}
                     >
                       <Volume2 className="w-3.5 h-3.5" />
                     </button>
@@ -585,7 +587,7 @@ export const MusicTherapyView: React.FC<MusicTherapyViewProps> = ({ onBack, pati
                         isThisPlaying ? 'text-teal-700' : 'text-slate-700 group-hover:text-teal-700'
                       }`}
                     >
-                      {isThisPlaying ? 'Playing' : 'Tap to Play'}
+                      {isThisPlaying ? t('nowPlaying') : t('tapToPlay')}
                       <span>→</span>
                     </span>
                   </div>

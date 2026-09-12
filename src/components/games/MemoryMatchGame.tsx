@@ -31,7 +31,7 @@ const EMOJI_PAIRS = [
 
 export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onBack, onGameComplete }) => {
   const { user } = useAuth();
-  const { speakText, fontSize } = useAccessibility();
+  const { speakText, fontSize, t } = useAccessibility();
 
   const difficulty = user?.cognitiveDifficulty || 'easy';
   // Pairs count: Easy: 3 pairs (6 cards), Medium: 6 pairs (12 cards), Hard: 8 pairs (16 cards)
@@ -69,7 +69,7 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onBack, onGame
     setStartTime(Date.now());
     setElapsedSeconds(0);
 
-    speakText('Find matching pairs of cards by tapping them.');
+    speakText(t('takeYourTime'));
   };
 
   useEffect(() => {
@@ -116,7 +116,7 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onBack, onGame
           newCards[idx2].isMatched = true;
           setCards([...newCards]);
           setFlippedIndices([]);
-          speakText(`Splendid match! You found both ${card1.name}s.`);
+          speakText(t('brilliantCorrect'));
 
           // Check if game complete
           const allMatched = newCards.every((c) => c.isMatched);
@@ -143,7 +143,7 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onBack, onGame
     const accuracy = Math.max(20, Math.min(100, Math.round(100 - (finalMistakes / Math.max(1, finalAttempts)) * 50)));
     const score = Math.max(50, Math.round(accuracy * 1.1));
 
-    speakText(`Wonderful job! You completed the memory match in ${finalAttempts} tries with ${accuracy} percent accuracy!`);
+    speakText(`${t('splendidGameComplete')} ${t('matchedAllCards')}`);
 
     try {
       const res = await api.recordGameResult({
@@ -159,7 +159,7 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onBack, onGame
 
       if (res.adaptiveDifficulty?.changed) {
         setDifficultyChangeMsg(
-          `Your adaptive level updated to ${res.adaptiveDifficulty.current.toUpperCase()} based on your consistent performance!`
+          `Adaptive level: ${res.adaptiveDifficulty.current.toUpperCase()}`
         );
       }
       onGameComplete?.();
@@ -178,21 +178,21 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onBack, onGame
           className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm cursor-pointer transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to Activities</span>
+          <span>{t('backToHub')}</span>
         </button>
 
         <div className="flex items-center gap-4 text-sm font-semibold text-slate-700">
           <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
             <Clock className="w-4 h-4 text-teal-600" />
-            <span>Time: {elapsedSeconds}s</span>
+            <span>{t('time')}: {elapsedSeconds}s</span>
           </div>
 
           <div className="bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
-            <span>Tries: {attempts}</span>
+            <span>{t('tries')}: {attempts}</span>
           </div>
 
           <div className="bg-teal-50 text-teal-800 px-3 py-1.5 rounded-xl border border-teal-200 font-bold capitalize">
-            Level: {difficulty}
+            {t('level')}: {t(difficulty) || difficulty}
           </div>
         </div>
 
@@ -202,7 +202,7 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onBack, onGame
           className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 font-bold text-sm cursor-pointer transition-colors"
         >
           <RefreshCw className="w-4 h-4" />
-          <span>Restart</span>
+          <span>{t('restart')}</span>
         </button>
       </div>
 
@@ -211,13 +211,13 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onBack, onGame
         <div className="flex items-center gap-2.5">
           <Sparkles className="w-5 h-5 text-teal-600 flex-shrink-0" />
           <p className="font-semibold">
-            Tap a card to turn it over, then find its matching twin. Take your time!
+            {t('takeYourTime')}
           </p>
         </div>
         <button
-          onClick={() => speakText('Tap a card to turn it over, then find its matching twin. Take all the time you need.')}
+          onClick={() => speakText(t('takeYourTime'))}
           className="text-teal-700 hover:text-teal-900 p-1 cursor-pointer"
-          title="Listen to Instructions"
+          title={t('readAloud')}
         >
           <Volume2 className="w-5 h-5" />
         </button>
@@ -271,11 +271,11 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onBack, onGame
           </div>
           <div className="space-y-1">
             <h3 className="font-extrabold text-2xl sm:text-3xl text-emerald-900">
-              Splendid Work! Game Complete!
+              {t('splendidGameComplete')}
             </h3>
             <p className="text-emerald-800 text-base max-w-md mx-auto">
-              You matched all the cards in <span className="font-bold">{attempts} tries</span> taking{' '}
-              <span className="font-bold">{elapsedSeconds} seconds</span>.
+              {t('matchedAllCards')} ({t('tries')}: <span className="font-bold">{attempts}</span>, {t('time')}:{' '}
+              <span className="font-bold">{elapsedSeconds}s</span>).
             </p>
           </div>
 
@@ -291,13 +291,13 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onBack, onGame
               onClick={initializeGame}
               className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-sm cursor-pointer transition-colors"
             >
-              Play Again
+              {t('playAgain')}
             </button>
             <button
               onClick={onBack}
               className="px-6 py-3 bg-white hover:bg-slate-50 text-slate-800 font-bold rounded-2xl border border-slate-300 shadow-xs cursor-pointer transition-colors"
             >
-              Back to Hub
+              {t('backToHub')}
             </button>
           </div>
         </div>

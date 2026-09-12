@@ -31,7 +31,7 @@ const POOL: Item[] = [
 
 export const PictureRecallGame: React.FC<PictureRecallGameProps> = ({ onBack, onGameComplete }) => {
   const { user } = useAuth();
-  const { speakText } = useAccessibility();
+  const { speakText, t } = useAccessibility();
 
   const difficulty = user?.cognitiveDifficulty || 'easy';
   const studyCount = difficulty === 'hard' ? 5 : difficulty === 'medium' ? 4 : 3;
@@ -67,8 +67,7 @@ export const PictureRecallGame: React.FC<PictureRecallGameProps> = ({ onBack, on
     setIsCorrect(null);
     setPhase('study');
 
-    const names = chosen.map((c) => c.name).join(', ');
-    speakText(`Please look at these ${chosen.length} pictures carefully: ${names}. Take your time, then tap Ready.`);
+    speakText(t('studyCarefully'));
   };
 
   useEffect(() => {
@@ -78,7 +77,7 @@ export const PictureRecallGame: React.FC<PictureRecallGameProps> = ({ onBack, on
   const handleReadyToRecall = () => {
     setPhase('recall');
     setStartTime(Date.now());
-    speakText('Which of these pictures was in the group you just looked at?');
+    speakText(t('whichItemWasInPictures'));
   };
 
   const handleOptionSelect = async (item: Item) => {
@@ -92,10 +91,10 @@ export const PictureRecallGame: React.FC<PictureRecallGameProps> = ({ onBack, on
     setIsCorrect(correct);
 
     if (correct) {
-      speakText(`Spot on! ${item.name} was indeed in your pictures.`);
+      speakText(t('brilliantCorrect'));
     } else {
       setMistakes((m) => m + 1);
-      speakText(`Not quite. The correct picture was ${targetItem.name}.`);
+      speakText(`${t('goodEffort')} ${targetItem.name}.`);
     }
 
     setPhase('result');
@@ -136,15 +135,15 @@ export const PictureRecallGame: React.FC<PictureRecallGameProps> = ({ onBack, on
           className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm cursor-pointer transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back</span>
+          <span>{t('backToHub')}</span>
         </button>
 
         <div className="flex items-center gap-3">
           <div className="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-sm font-bold text-slate-700">
-            Round {round} of {maxRounds}
+            {round} / {maxRounds}
           </div>
           <div className="bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-xl text-sm font-bold text-blue-800 capitalize">
-            Level: {difficulty}
+            {t('level')}: {t(difficulty) || difficulty}
           </div>
         </div>
 
@@ -153,7 +152,7 @@ export const PictureRecallGame: React.FC<PictureRecallGameProps> = ({ onBack, on
           className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-800 font-bold text-sm cursor-pointer transition-colors"
         >
           <RefreshCw className="w-4 h-4" />
-          <span>Restart</span>
+          <span>{t('restart')}</span>
         </button>
       </div>
 
@@ -162,13 +161,13 @@ export const PictureRecallGame: React.FC<PictureRecallGameProps> = ({ onBack, on
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6 text-center">
           <div className="space-y-2">
             <span className="inline-flex items-center gap-1.5 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-              <Eye className="w-4 h-4" /> Study Phase
+              <Eye className="w-4 h-4" /> {t('visualAssociation')}
             </span>
             <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-              Look at these pictures carefully
+              {t('studyCarefully')}
             </h3>
             <p className="text-slate-600 text-base max-w-md mx-auto">
-              Take all the time you want to remember these {studyItems.length} items. When you feel ready, tap the green button below.
+              {t('readyToRecall')}
             </p>
           </div>
 
@@ -192,7 +191,7 @@ export const PictureRecallGame: React.FC<PictureRecallGameProps> = ({ onBack, on
             onClick={handleReadyToRecall}
             className="px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-lg rounded-2xl shadow-md cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
-            I am Ready! →
+            {t('beginRecall')} →
           </button>
         </div>
       )}
@@ -202,10 +201,10 @@ export const PictureRecallGame: React.FC<PictureRecallGameProps> = ({ onBack, on
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6 text-center">
           <div className="space-y-2">
             <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-              Which item was in your pictures?
+              {t('whichItemWasInPictures')}
             </h3>
             <p className="text-slate-600 text-base max-w-md mx-auto">
-              Choose the one item that was part of the pictures you just studied.
+              {t('chooseMatchingItem')}
             </p>
           </div>
 
@@ -255,12 +254,12 @@ export const PictureRecallGame: React.FC<PictureRecallGameProps> = ({ onBack, on
                 {isCorrect ? (
                   <>
                     <CheckCircle2 className="w-6 h-6 text-emerald-600" />
-                    <span>Brilliant! You remembered correctly.</span>
+                    <span>{t('brilliantCorrect')}</span>
                   </>
                 ) : (
                   <>
                     <XCircle className="w-6 h-6 text-amber-600" />
-                    <span>Good effort! The correct answer was {targetItem?.name}.</span>
+                    <span>{t('goodEffort')} {targetItem?.name}.</span>
                   </>
                 )}
               </div>
@@ -270,7 +269,7 @@ export const PictureRecallGame: React.FC<PictureRecallGameProps> = ({ onBack, on
                 onClick={handleNextRound}
                 className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-sm cursor-pointer transition-colors"
               >
-                {round < maxRounds ? 'Next Picture Round →' : 'Complete Exercise'}
+                {round < maxRounds ? `${t('nextRound')} →` : t('completeExercise')}
               </button>
             </div>
           )}

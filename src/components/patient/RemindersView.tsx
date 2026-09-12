@@ -38,7 +38,7 @@ interface RemindersViewProps {
 
 export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
   const { user } = useAuth();
-  const { speakText, fontSize, highContrast } = useAccessibility();
+  const { speakText, fontSize, highContrast, t } = useAccessibility();
 
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [loading, setLoading] = useState(true);
@@ -124,7 +124,7 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
 
       if (newStatus) {
         reminderAudio.playGentleChime();
-        speakText(`Splendid! You completed ${reminder.title}.`);
+        speakText(`${reminder.title} - ${t('done')}`);
       }
     } catch (e) {
       console.warn('Failed to toggle reminder status:', e);
@@ -135,7 +135,7 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
     try {
       await api.deleteReminder(id);
       setReminders((prev) => prev.filter((r) => r._id !== id));
-      speakText(`Removed ${title} from schedule.`);
+      speakText(`${title} - ${t('clear')}`);
     } catch (e) {
       console.warn('Failed to delete reminder:', e);
     }
@@ -166,7 +166,7 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
     try {
       const updated = await api.updateReminder(reminder._id, { time: newTimeStr });
       setReminders((prev) => prev.map((r) => (r._id === reminder._id ? updated : r)));
-      speakText(`Snoozed ${reminder.title} for 5 minutes until ${newTimeStr}.`);
+      speakText(`${t('snoozeFiveMin')}: ${reminder.title}`);
     } catch (e) {
       console.warn('Failed to snooze reminder:', e);
     }
@@ -177,7 +177,7 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
       reminderAudio.stop();
     } else {
       reminderAudio.playDefaultReminderSong(false);
-      speakText('Playing the peaceful default reminder song.');
+      speakText(t('gentleHarmonicChime'));
     }
   };
 
@@ -190,12 +190,12 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
   const handleReadSchedule = () => {
     const pending = reminders.filter((r) => !r.completed);
     if (pending.length === 0) {
-      speakText('Splendid news! All your scheduled tasks and reminders for today are completed.');
+      speakText(t('allDone'));
       return;
     }
     const text =
-      `You have ${pending.length} scheduled task${pending.length === 1 ? '' : 's'} remaining: ` +
-      pending.map((r) => `${r.title} at ${r.time}`).join('. ');
+      `${pending.length} ${t('myReminders')}: ` +
+      pending.map((r) => `${r.title} ${r.time}`).join('. ');
     speakText(text);
   };
 
@@ -259,7 +259,7 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
           className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-sm shadow-xs cursor-pointer transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to Dashboard</span>
+          <span>{t('backToDashboard')}</span>
         </button>
 
         <div className="flex items-center gap-2.5">
@@ -270,8 +270,8 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-sm font-bold cursor-pointer transition-colors"
           >
             <Volume2 className="w-4 h-4 text-amber-700" />
-            <span className="hidden sm:inline">Read Schedule Aloud</span>
-            <span className="sm:hidden">Read Aloud</span>
+            <span className="hidden sm:inline">{t('readScheduleAloud')}</span>
+            <span className="sm:hidden">{t('readAloud')}</span>
           </button>
 
           {/* Add Task / Reminder Button */}
@@ -281,7 +281,7 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-teal-700 hover:bg-teal-800 text-white text-sm font-black shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
           >
             <Plus className="w-5 h-5" />
-            <span>Add Task / Reminder</span>
+            <span>{t('addTaskReminder')}</span>
           </button>
         </div>
       </div>
@@ -292,7 +292,7 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
           <div className="space-y-2 max-w-xl">
             <div className="inline-flex items-center gap-2 bg-amber-500/30 px-3.5 py-1 rounded-full text-xs font-bold text-amber-200 uppercase tracking-wider">
               <Clock className="w-3.5 h-3.5" />
-              <span>Current Time: {currentTimeStr || 'Ready'}</span>
+              <span>{t('time')}: {currentTimeStr || 'Ready'}</span>
             </div>
             <h1
               id="reminders-title"
@@ -300,11 +300,10 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
                 fontSize === 'extra-large' ? 'text-3xl sm:text-4xl' : 'text-2xl sm:text-3xl'
               }`}
             >
-              Daily Schedule & Melodic Reminders
+              {t('dailyScheduleAndAlarms')}
             </h1>
             <p className="text-amber-100/90 text-sm sm:text-base leading-relaxed">
-              Seamlessly blend your daily tasks, chores, and medication alarms. Each reminder sounds with
-              our calming, senior-crafted default bell song.
+              {t('scheduleSubtitle')}
             </p>
           </div>
 
@@ -314,7 +313,7 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
               <div className="flex items-center gap-2">
                 <Music className="w-5 h-5 text-amber-300" />
                 <span className="text-xs font-black uppercase tracking-wider text-amber-200">
-                  Default Song Alert
+                  {t('defaultSongAlert')}
                 </span>
               </div>
               <button
@@ -330,7 +329,7 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
             </div>
 
             <p className="text-xs text-amber-100/80">
-              Gentle harmonic lullaby chime to notify you comfortably.
+              {t('gentleHarmonicChime')}
             </p>
 
             <button
@@ -346,12 +345,12 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
               {isSongPlaying ? (
                 <>
                   <Square className="w-4 h-4 fill-current" />
-                  <span>Stop Song Playing</span>
+                  <span>{t('stopSongPlaying')}</span>
                 </>
               ) : (
                 <>
                   <Play className="w-4 h-4 fill-current" />
-                  <span>Listen to Default Song 🎵</span>
+                  <span>{t('listenToDefaultSong')}</span>
                 </>
               )}
             </button>
@@ -363,9 +362,9 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
       <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="space-y-1 w-full sm:w-auto">
           <div className="flex items-center gap-2.5">
-            <span className="text-sm font-extrabold text-slate-900">Today's Schedule Progress:</span>
+            <span className="text-sm font-extrabold text-slate-900">{t('todaysScheduleProgress')}:</span>
             <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">
-              {completedCount} of {totalCount} completed ({completionRate}%)
+              {completedCount} / {totalCount} ({completionRate}%)
             </span>
           </div>
           <div className="w-full sm:w-72 h-3 bg-slate-100 rounded-full overflow-hidden">
@@ -378,19 +377,19 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
 
         <div className="flex items-center gap-2 text-xs font-bold text-slate-600">
           <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping" />
-          <span>Active automatic song alerts enabled</span>
+          <span>{t('melodySong')}</span>
         </div>
       </div>
 
       {/* Filter Tabs Strip */}
       <div className="flex flex-wrap items-center gap-2">
         {[
-          { id: 'all', label: 'All Items' },
-          { id: 'task', label: 'Tasks & Chores' },
-          { id: 'medication', label: 'Medications' },
-          { id: 'hydration', label: 'Hydration' },
-          { id: 'activity', label: 'Activities & Walks' },
-          { id: 'completed', label: 'Completed' },
+          { id: 'all', label: t('allItems') },
+          { id: 'task', label: t('tasksAndChores') },
+          { id: 'medication', label: t('medications') },
+          { id: 'hydration', label: t('hydration') },
+          { id: 'activity', label: t('activitiesAndWalks') },
+          { id: 'completed', label: t('completed') },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -442,20 +441,20 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
 
                   {reminder.priority === 'urgent' && (
                     <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-rose-600 text-white uppercase">
-                      Urgent
+                      {t('urgent')}
                     </span>
                   )}
 
                   {reminder.soundEnabled !== false && (
                     <span className="text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full flex items-center gap-1">
                       <Music className="w-3 h-3 text-amber-600" />
-                      <span>Melody Song</span>
+                      <span>{t('melodySong')}</span>
                     </span>
                   )}
 
                   {reminder.completed && (
                     <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
-                      ✓ Completed
+                      ✓ {t('completed')}
                     </span>
                   )}
                 </div>
@@ -484,10 +483,10 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
                 type="button"
                 onClick={() => handleManualTriggerAlarm(reminder)}
                 className="px-3 py-2.5 rounded-2xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs font-extrabold flex items-center gap-1.5 transition-colors cursor-pointer"
-                title="Ring Melodic Alarm"
+                title={t('soundAlarm')}
               >
                 <Bell className="w-4 h-4 text-amber-600" />
-                <span className="hidden sm:inline">Sound Alarm</span>
+                <span className="hidden sm:inline">{t('soundAlarm')}</span>
               </button>
 
               {/* Read text aloud */}
@@ -495,13 +494,13 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
                 type="button"
                 onClick={() =>
                   speakText(
-                    `${reminder.title} scheduled for ${reminder.time}. ${
+                    `${reminder.title} - ${reminder.time}. ${
                       reminder.notes || reminder.description || ''
                     }`
                   )
                 }
                 className="p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer"
-                title="Read reminder aloud"
+                title={t('readAloud')}
                 aria-label={`Read ${reminder.title} aloud`}
               >
                 <Volume2 className="w-4 h-4" />
@@ -512,7 +511,7 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
                 type="button"
                 onClick={() => handleDeleteReminder(reminder._id, reminder.title)}
                 className="p-2.5 rounded-2xl bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 transition-colors cursor-pointer"
-                title="Delete task"
+                title={t('clear')}
                 aria-label={`Delete ${reminder.title}`}
               >
                 <Trash2 className="w-4 h-4" />
@@ -531,12 +530,12 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
                 {reminder.completed ? (
                   <>
                     <CheckCircle2 className="w-4 h-4 text-emerald-700" />
-                    <span>Done</span>
+                    <span>{t('done')}</span>
                   </>
                 ) : (
                   <>
                     <Circle className="w-4 h-4" />
-                    <span>Mark Done</span>
+                    <span>{t('markDone')}</span>
                   </>
                 )}
               </button>
@@ -548,17 +547,17 @@ export const RemindersView: React.FC<RemindersViewProps> = ({ onBack }) => {
           <div className="bg-white rounded-3xl p-8 border border-slate-200 text-center space-y-3">
             <Sparkles className="w-9 h-9 text-amber-500 mx-auto" />
             <h4 className="font-extrabold text-lg text-slate-800">
-              No schedule items found in this section
+              {t('noScheduleItems')}
             </h4>
             <p className="text-slate-500 text-sm max-w-sm mx-auto">
-              You can tap "Add Task / Reminder" above to add new routines, medications, or chores.
+              {t('scheduleSubtitle')}
             </p>
             <button
               onClick={() => setIsAddModalOpen(true)}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-teal-700 text-white text-sm font-bold shadow-xs hover:bg-teal-800 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
-              <span>Add Your First Task</span>
+              <span>{t('addFirstTask')}</span>
             </button>
           </div>
         )}

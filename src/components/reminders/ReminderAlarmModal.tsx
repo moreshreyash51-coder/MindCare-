@@ -36,7 +36,7 @@ export const ReminderAlarmModal: React.FC<ReminderAlarmModalProps> = ({
   onComplete,
   onSnooze,
 }) => {
-  const { speakText, fontSize } = useAccessibility();
+  const { speakText, fontSize, t } = useAccessibility();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(() => reminderAudio.isMuted());
   const [currentTune, setCurrentTune] = useState<string>('morning-bells');
@@ -58,7 +58,7 @@ export const ReminderAlarmModal: React.FC<ReminderAlarmModalProps> = ({
       }
       // Voice announcement for elderly patients
       speakText(
-        `Reminder: It is time for ${reminder.title}. Scheduled for ${reminder.time}. ${
+        `${reminder.title} - ${reminder.time}. ${
           reminder.notes || reminder.description || ''
         }`
       );
@@ -268,7 +268,7 @@ export const ReminderAlarmModal: React.FC<ReminderAlarmModalProps> = ({
               type="button"
               onClick={() =>
                 speakText(
-                  `Reminder for ${reminder.title} at ${reminder.time}. ${
+                  `${reminder.title} - ${reminder.time}. ${
                     reminder.notes || reminder.description || ''
                   }`
                 )
@@ -276,9 +276,9 @@ export const ReminderAlarmModal: React.FC<ReminderAlarmModalProps> = ({
               className="inline-flex items-center gap-1.5 text-teal-700 hover:text-teal-900 font-bold underline cursor-pointer"
             >
               <Volume2 className="w-4 h-4" />
-              <span>Listen Voice Announcement</span>
+              <span>{t('readAloud')}</span>
             </button>
-            <span className="text-slate-400">Repeats: {reminder.recurrence || 'Daily'}</span>
+            <span className="text-slate-400">{reminder.recurrence || 'Daily'}</span>
           </div>
         </div>
 
@@ -292,7 +292,7 @@ export const ReminderAlarmModal: React.FC<ReminderAlarmModalProps> = ({
             className="w-full py-4 px-6 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black text-lg sm:text-xl rounded-2xl shadow-lg hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer flex items-center justify-center gap-3 min-h-[58px]"
           >
             <CheckCircle2 className="w-7 h-7" />
-            <span>Mark as Done</span>
+            <span>{t('done')}</span>
           </button>
 
           <div className="grid grid-cols-2 gap-3">
@@ -304,7 +304,7 @@ export const ReminderAlarmModal: React.FC<ReminderAlarmModalProps> = ({
               className="py-3 px-4 bg-amber-50 hover:bg-amber-100 text-amber-900 font-extrabold text-sm sm:text-base rounded-xl border border-amber-300 transition-colors cursor-pointer flex items-center justify-center gap-2 min-h-[48px]"
             >
               <Clock className="w-4 h-4 text-amber-700" />
-              <span>Snooze (5 min)</span>
+              <span>{t('snoozeFiveMin')}</span>
             </button>
 
             {/* 3. Dismiss Alarm */}
@@ -315,7 +315,7 @@ export const ReminderAlarmModal: React.FC<ReminderAlarmModalProps> = ({
               className="py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-sm sm:text-base rounded-xl border border-slate-300 transition-colors cursor-pointer flex items-center justify-center gap-2 min-h-[48px]"
             >
               <X className="w-4 h-4" />
-              <span>Dismiss Song</span>
+              <span>{t('dismiss')}</span>
             </button>
           </div>
         </div>

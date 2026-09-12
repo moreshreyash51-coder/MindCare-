@@ -297,7 +297,14 @@ export interface CaregiverObservation {
   createdAt: string;
 }
 
-export type SongCategory = 'classical' | 'nostalgia' | 'nature' | 'ambient' | 'custom';
+export type SongCategory =
+  | 'bollywood'
+  | 'northeast'
+  | 'classical'
+  | 'nostalgia'
+  | 'nature'
+  | 'ambient'
+  | 'custom';
 
 export interface SongTrack {
   id: string;
