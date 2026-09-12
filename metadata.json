@@ -1,0 +1,6 @@
+{
+  "name": "MindCare",
+  "description": "AI-based cognitive gaming and memory assistance platform for elderly users and caregivers.",
+  "requestFramePermissions": ["microphone", "camera", "geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
