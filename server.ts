@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import { createServer as createViteServer } from 'vite';
 import dotenv from 'dotenv';
 
@@ -31,6 +32,7 @@ async function startServer() {
       service: 'MindCare API',
       timestamp: new Date().toISOString(),
       aiConfigured: Boolean(process.env.GEMINI_API_KEY),
+      environment: process.env.NODE_ENV || 'development',
     });
   });
 
@@ -53,22 +55,34 @@ async function startServer() {
   app.use('/api/ai', aiRouter);
   app.use('/api/notifications', notificationsRouter);
 
+  // 404 handler specifically for API routes (prevents returning HTML for missing API endpoints)
+  app.all('/api/*', (_req, res) => {
+    res.status(404).json({ error: 'API endpoint not found' });
+  });
+
+  // Determine if running in production bundle mode
+  const isProduction =
+    process.env.NODE_ENV === 'production' ||
+    Boolean(process.argv[1] && (process.argv[1].endsWith('.cjs') || process.argv[1].includes('dist')));
+
   // Vite middleware for development vs static for production
-  if (process.env.NODE_ENV !== 'production') {
+  if (!isProduction) {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), 'dist');
+    // Resolve dist path
+    const distPath = path.resolve(process.cwd(), 'dist');
+
     app.use(express.static(distPath));
     app.get('*', (_req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
+  const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`
   🧠 MindCare Full-Stack Application is running!
   ➜ Local:   http://localhost:${PORT}
@@ -76,6 +90,18 @@ async function startServer() {
   ➜ API:     http://localhost:${PORT}/api/health
 `);
   });
+
+  // Graceful shutdown handling for Docker, Cloud Run & Local termination
+  const shutdown = () => {
+    console.log('\nGracefully terminating MindCare server...');
+    server.close(() => {
+      console.log('MindCare server closed.');
+      process.exit(0);
+    });
+  };
+
+  process.on('SIGINT', shutdown);
+  process.on('SIGTERM', shutdown);
 }
 
 startServer().catch((err) => {
