@@ -1,64 +1,18 @@
 import express from 'express';
 import path from 'path';
-import fs from 'fs';
 import { createServer as createViteServer } from 'vite';
 import dotenv from 'dotenv';
 
-import { authRouter } from './server/routes/auth.js';
-import { patientsRouter } from './server/routes/patients.js';
-import { memoriesRouter } from './server/routes/memories.js';
-import { gamesRouter } from './server/routes/games.js';
-import { remindersRouter } from './server/routes/reminders.js';
-import { aiRouter } from './server/routes/ai.js';
-import { notificationsRouter } from './server/routes/notifications.js';
-import { initDatabase, getDatabaseStatus } from './server/db/schema.js';
+import { app } from './server/app.js';
+import { ensureDatabase } from './server/db/schema.js';
 
 dotenv.config();
 
 async function startServer() {
   // Initialize Database (MongoDB with resilient in-memory fallback)
-  await initDatabase();
+  await ensureDatabase();
 
-  const app = express();
   const PORT = Number(process.env.PORT) || 3000;
-
-  app.use(express.json({ limit: '15mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '15mb' }));
-
-  // API Health Check
-  app.get('/api/health', (_req, res) => {
-    res.json({
-      status: 'ok',
-      service: 'MindCare API',
-      timestamp: new Date().toISOString(),
-      aiConfigured: Boolean(process.env.GEMINI_API_KEY),
-      environment: process.env.NODE_ENV || 'development',
-    });
-  });
-
-  // MongoDB Status & Diagnostics
-  app.get('/api/db/status', async (_req, res) => {
-    try {
-      const status = await getDatabaseStatus();
-      res.json(status);
-    } catch (err: any) {
-      res.status(500).json({ error: 'Failed to retrieve database status', details: err.message });
-    }
-  });
-
-  // Register API Routes
-  app.use('/api/auth', authRouter);
-  app.use('/api/patients', patientsRouter);
-  app.use('/api/memories', memoriesRouter);
-  app.use('/api/games', gamesRouter);
-  app.use('/api/reminders', remindersRouter);
-  app.use('/api/ai', aiRouter);
-  app.use('/api/notifications', notificationsRouter);
-
-  // 404 handler specifically for API routes (prevents returning HTML for missing API endpoints)
-  app.all('/api/*', (_req, res) => {
-    res.status(404).json({ error: 'API endpoint not found' });
-  });
 
   // Determine if running in production bundle mode
   const isProduction =

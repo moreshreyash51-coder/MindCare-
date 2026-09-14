@@ -878,6 +878,29 @@ const memoryStore = {
 // Database Connection Manager
 let isMongoConnected = false;
 let mongoConnectionError: string | null = null;
+let dbInitPromise: Promise<{ isConnected: boolean; message: string }> | null = null;
+
+export async function ensureDatabase(): Promise<{ isConnected: boolean; message: string }> {
+  if (mongoose.connection.readyState === 1 && isMongoConnected) {
+    return {
+      isConnected: true,
+      message: `Connected to MongoDB database "${mongoose.connection.name}"`,
+    };
+  }
+
+  if (!dbInitPromise) {
+    dbInitPromise = initDatabase().catch((err: any) => {
+      console.warn('MongoDB initialization caught error:', err);
+      dbInitPromise = null;
+      return {
+        isConnected: false,
+        message: err.message || 'Connection failed',
+      };
+    });
+  }
+
+  return dbInitPromise;
+}
 
 export async function initDatabase(): Promise<{ isConnected: boolean; message: string }> {
   const uri = process.env.MONGODB_URI;
