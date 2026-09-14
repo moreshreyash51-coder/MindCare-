@@ -1,0 +1,956 @@
+{
+  "users": [
+    {
+      "_id": "patient_eleanor",
+      "name": "Eleanor Vance",
+      "email": "eleanor@example.com",
+      "password": "$2b$08$pzBOI/BfOU0Eic7h5z8QFuUAht9zEuqL7S16XhUKjNQe1DVDwgdbq",
+      "role": "patient",
+      "gender": "female",
+      "patientId": "patient_eleanor",
+      "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&auto=format&fit=crop&q=80",
+      "dateOfBirth": "1952-04-12",
+      "emergencyContact": {
+        "name": "Sarah Vance",
+        "phone": "(555) 234-5678",
+        "relation": "Daughter"
+      },
+      "language": "en",
+      "accessibilitySettings": {
+        "fontSize": "large",
+        "highContrast": false,
+        "voiceAssistance": true,
+        "speechRate": 0.9,
+        "simpleNavigation": true
+      },
+      "cognitiveDifficulty": "easy",
+      "location": {
+        "latitude": 40.7306,
+        "longitude": -74.2691,
+        "address": "42 Meadowbrook Lane, Maplewood, NJ 07040",
+        "accuracy": 6,
+        "batteryLevel": 86,
+        "status": "at_home",
+        "lastUpdated": "2026-09-14T07:50:46.133Z",
+        "homeLatitude": 40.7306,
+        "homeLongitude": -74.2691,
+        "homeAddress": "42 Meadowbrook Lane, Maplewood, NJ 07040",
+        "safeZoneRadiusMeters": 250
+      },
+      "locationHistory": [
+        {
+          "_id": "loc_e1",
+          "patientId": "patient_eleanor",
+          "latitude": 40.7306,
+          "longitude": -74.2691,
+          "address": "Living Room, 42 Meadowbrook Lane, Maplewood, NJ",
+          "status": "at_home",
+          "timestamp": "2026-09-14T07:48:46.134Z"
+        },
+        {
+          "_id": "loc_e2",
+          "patientId": "patient_eleanor",
+          "latitude": 40.7308,
+          "longitude": -74.2689,
+          "address": "Garden Walkway (Safe Zone), Maplewood, NJ",
+          "status": "safe_zone",
+          "timestamp": "2026-09-14T07:28:46.134Z"
+        },
+        {
+          "_id": "loc_e3",
+          "patientId": "patient_eleanor",
+          "latitude": 40.7305,
+          "longitude": -74.2692,
+          "address": "Front Porch, 42 Meadowbrook Lane, Maplewood, NJ",
+          "status": "at_home",
+          "timestamp": "2026-09-14T06:38:46.134Z"
+        }
+      ],
+      "createdAt": "2026-08-15T07:53:46.134Z",
+      "updatedAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "_id": "patient_arthur",
+      "name": "Arthur Vance",
+      "email": "arthur@example.com",
+      "password": "$2b$08$pzBOI/BfOU0Eic7h5z8QFuUAht9zEuqL7S16XhUKjNQe1DVDwgdbq",
+      "role": "patient",
+      "gender": "male",
+      "patientId": "patient_arthur",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80",
+      "dateOfBirth": "1949-08-20",
+      "emergencyContact": {
+        "name": "David Vance",
+        "phone": "(555) 876-5432",
+        "relation": "Son"
+      },
+      "language": "en",
+      "accessibilitySettings": {
+        "fontSize": "large",
+        "highContrast": false,
+        "voiceAssistance": true,
+        "speechRate": 0.9,
+        "simpleNavigation": true
+      },
+      "cognitiveDifficulty": "easy",
+      "location": {
+        "latitude": 42.5878,
+        "longitude": -72.6001,
+        "address": "15 Oak Ridge Road, Greenfield, MA 01301",
+        "accuracy": 8,
+        "batteryLevel": 92,
+        "status": "at_home",
+        "lastUpdated": "2026-09-14T07:49:46.134Z",
+        "homeLatitude": 42.5878,
+        "homeLongitude": -72.6001,
+        "homeAddress": "15 Oak Ridge Road, Greenfield, MA 01301",
+        "safeZoneRadiusMeters": 250
+      },
+      "locationHistory": [
+        {
+          "_id": "loc_a1",
+          "patientId": "patient_arthur",
+          "latitude": 42.5878,
+          "longitude": -72.6001,
+          "address": "Workshop, 15 Oak Ridge Road, Greenfield, MA",
+          "status": "at_home",
+          "timestamp": "2026-09-14T07:43:46.134Z"
+        },
+        {
+          "_id": "loc_a2",
+          "patientId": "patient_arthur",
+          "latitude": 42.5879,
+          "longitude": -72.5999,
+          "address": "Backyard Arbor, Greenfield, MA",
+          "status": "safe_zone",
+          "timestamp": "2026-09-14T07:13:46.134Z"
+        }
+      ],
+      "createdAt": "2026-08-20T07:53:46.134Z",
+      "updatedAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "_id": "caregiver_sarah",
+      "name": "Sarah Vance",
+      "email": "sarah@example.com",
+      "password": "$2b$08$pzBOI/BfOU0Eic7h5z8QFuUAht9zEuqL7S16XhUKjNQe1DVDwgdbq",
+      "role": "caregiver",
+      "gender": "female",
+      "patientId": "patient_eleanor",
+      "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&auto=format&fit=crop&q=80",
+      "emergencyContact": {
+        "name": "Dr. Robert Miller",
+        "phone": "(555) 987-6543",
+        "relation": "Family Physician"
+      },
+      "language": "en",
+      "accessibilitySettings": {
+        "fontSize": "normal",
+        "highContrast": false,
+        "voiceAssistance": false,
+        "speechRate": 1,
+        "simpleNavigation": false
+      },
+      "cognitiveDifficulty": "medium",
+      "createdAt": "2026-08-15T07:53:46.134Z",
+      "updatedAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "_id": "caregiver_david",
+      "name": "David Vance",
+      "email": "david@example.com",
+      "password": "$2b$08$pzBOI/BfOU0Eic7h5z8QFuUAht9zEuqL7S16XhUKjNQe1DVDwgdbq",
+      "role": "caregiver",
+      "gender": "male",
+      "patientId": "patient_arthur",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80",
+      "emergencyContact": {
+        "name": "Dr. Evelyn Clark",
+        "phone": "(555) 345-6789",
+        "relation": "Geriatric Specialist"
+      },
+      "language": "en",
+      "accessibilitySettings": {
+        "fontSize": "normal",
+        "highContrast": false,
+        "voiceAssistance": false,
+        "speechRate": 1,
+        "simpleNavigation": false
+      },
+      "cognitiveDifficulty": "medium",
+      "createdAt": "2026-08-20T07:53:46.134Z",
+      "updatedAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "name": "Grandpa Robert",
+      "email": "robert@example.com",
+      "password": "$2b$10$zC0mhQLnWRySV258rk7OXO7PdeUvlRWtQeJtDcImLJhTFqhdrnSzy",
+      "role": "patient",
+      "gender": "male",
+      "patientId": "doc_z2pbih8mu0y5i0k",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80",
+      "language": "en",
+      "accessibilitySettings": {
+        "fontSize": "large",
+        "highContrast": false,
+        "voiceAssistance": true,
+        "speechRate": 0.9,
+        "simpleNavigation": true
+      },
+      "cognitiveDifficulty": "easy",
+      "createdAt": "2026-09-14T07:54:03.764Z",
+      "updatedAt": "2026-09-14T07:54:03.764Z",
+      "_id": "doc_z2pbih8mu0y5i0k"
+    },
+    {
+      "name": "Test Patient",
+      "email": "newpatient_1789373025569@example.com",
+      "password": "$2b$10$tm9o821ik.pSFipSTolxIed.tk9xFp7R3CU15xF4V7n4O3rsEmdxC",
+      "role": "patient",
+      "gender": "female",
+      "patientId": "doc_8yp98n1mu0yhz4a",
+      "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&auto=format&fit=crop&q=80",
+      "language": "en",
+      "accessibilitySettings": {
+        "fontSize": "large",
+        "highContrast": false,
+        "voiceAssistance": true,
+        "speechRate": 0.9,
+        "simpleNavigation": true
+      },
+      "cognitiveDifficulty": "easy",
+      "createdAt": "2026-09-14T08:03:45.802Z",
+      "updatedAt": "2026-09-14T08:03:45.803Z",
+      "_id": "doc_8yp98n1mu0yhz4a"
+    },
+    {
+      "name": "Test Caregiver",
+      "email": "newcg_1789373025841@example.com",
+      "password": "$2b$10$qRqkkVu0szTpL7UnC9a7iO9tKcLpJSkzguB/4rPOAcsIb4J3IGi5C",
+      "role": "caregiver",
+      "gender": "male",
+      "patientId": "patient_eleanor",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80",
+      "language": "en",
+      "accessibilitySettings": {
+        "fontSize": "large",
+        "highContrast": false,
+        "voiceAssistance": true,
+        "speechRate": 0.9,
+        "simpleNavigation": true
+      },
+      "cognitiveDifficulty": "easy",
+      "createdAt": "2026-09-14T08:03:45.951Z",
+      "updatedAt": "2026-09-14T08:03:45.951Z",
+      "_id": "doc_gtftt8dmu0yhz8f"
+    },
+    {
+      "name": "Test Debugger",
+      "email": "debug_1789373274567@test.com",
+      "password": "$2b$10$dCOzUe0B2e/ewq25k5b/X.8/FrV/p7oa0JbFhFdGoWlKnNk9OGsLC",
+      "role": "patient",
+      "gender": "male",
+      "patientId": "doc_f2niavwmu0ynb8m",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80",
+      "language": "en",
+      "accessibilitySettings": {
+        "fontSize": "large",
+        "highContrast": false,
+        "voiceAssistance": true,
+        "speechRate": 0.9,
+        "simpleNavigation": true
+      },
+      "cognitiveDifficulty": "easy",
+      "createdAt": "2026-09-14T08:07:54.790Z",
+      "updatedAt": "2026-09-14T08:07:54.790Z",
+      "_id": "doc_f2niavwmu0ynb8m"
+    }
+  ],
+  "memories": [
+    {
+      "_id": "mem_1",
+      "patientId": "patient_eleanor",
+      "title": "My Loving Daughter, Sarah",
+      "personName": "Sarah Vance",
+      "relationship": "Daughter & Primary Caregiver",
+      "description": "Sarah is my wonderful daughter. She was born on a sunny Tuesday in October. She loves making chamomile tea for us, brings fresh yellow sunflowers, and visits every Sunday afternoon.",
+      "photoUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&auto=format&fit=crop&q=80",
+      "tags": [
+        "Family",
+        "Daughter",
+        "Sunday Visits"
+      ],
+      "dateEra": "Always Close",
+      "createdAt": "2026-08-25T07:53:46.134Z",
+      "updatedAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "_id": "mem_2",
+      "patientId": "patient_eleanor",
+      "title": "Grandson Leo at the Park",
+      "personName": "Leo",
+      "relationship": "Grandson",
+      "description": "Leo is 8 years old. He loves dinosaurs, playing checkers, and drawing colorful birds for my refrigerator. His laugh lights up the whole room.",
+      "photoUrl": "https://images.unsplash.com/photo-1508873696983-2df5293cb32f?w=600&auto=format&fit=crop&q=80",
+      "tags": [
+        "Family",
+        "Grandson",
+        "Park"
+      ],
+      "dateEra": "Recent Years",
+      "createdAt": "2026-08-30T07:53:46.134Z",
+      "updatedAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "_id": "mem_3",
+      "patientId": "patient_eleanor",
+      "title": "Blue Ridge Mountain Cabin",
+      "personName": "The Family Cabin",
+      "relationship": "Favorite Peaceful Place",
+      "description": "Our wooden cabin surrounded by tall pine trees and crisp morning air. We sat on the porch rocking chairs listening to bluebirds and sipping warm cider.",
+      "photoUrl": "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=600&auto=format&fit=crop&q=80",
+      "tags": [
+        "Cabin",
+        "Nature",
+        "Peaceful"
+      ],
+      "dateEra": "Summer Vacations",
+      "createdAt": "2026-09-04T07:53:46.134Z",
+      "updatedAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "_id": "mem_4",
+      "patientId": "patient_eleanor",
+      "title": "Sunny the Golden Retriever",
+      "personName": "Sunny",
+      "relationship": "Beloved Pet",
+      "description": "Sunny had the softest golden fur and loved greeting everyone at the front gate with his tail wagging like clockwork. Always loyal and gentle.",
+      "photoUrl": "https://images.unsplash.com/photo-1552053831-71594a27632d?w=600&auto=format&fit=crop&q=80",
+      "tags": [
+        "Pets",
+        "Golden Retriever",
+        "Comfort"
+      ],
+      "dateEra": "Cherished Years",
+      "createdAt": "2026-09-09T07:53:46.134Z",
+      "updatedAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "_id": "mem_arthur_1",
+      "patientId": "patient_arthur",
+      "title": "My Caring Son, David",
+      "personName": "David Vance",
+      "relationship": "Son & Primary Caregiver",
+      "description": "David always drops by with a warm smile, helps in the workshop, and shares wonderful stories over black tea.",
+      "photoUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&auto=format&fit=crop&q=80",
+      "tags": [
+        "Family",
+        "Son",
+        "Support"
+      ],
+      "dateEra": "Present",
+      "createdAt": "2026-09-02T07:53:46.134Z",
+      "updatedAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "_id": "mem_arthur_2",
+      "patientId": "patient_arthur",
+      "title": "Woodworking Workshop & Clocks",
+      "personName": "Handcrafted Clocks",
+      "relationship": "Lifelong Hobby",
+      "description": "Building grandfather clocks with cedar wood and brass chimes. The steady tick-tock was music to the ears.",
+      "photoUrl": "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&auto=format&fit=crop&q=80",
+      "tags": [
+        "Woodwork",
+        "Craft",
+        "Memories"
+      ],
+      "dateEra": "1980s - 2000s",
+      "createdAt": "2026-09-06T07:53:46.134Z",
+      "updatedAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "patientId": "doc_z2pbih8mu0y5i0k",
+      "title": "Family Garden Afternoon",
+      "personName": "Family & Loved Ones",
+      "relationship": "Family",
+      "description": "A warm and sunny afternoon gathered with loved ones on the back patio, surrounded by fresh flowers and laughter.",
+      "photoUrl": "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=600&auto=format&fit=crop&q=80",
+      "tags": [
+        "Family",
+        "Garden",
+        "Spring"
+      ],
+      "dateEra": "Recent Cherished Memory",
+      "createdAt": "2026-09-13T07:54:03.765Z",
+      "updatedAt": "2026-09-13T07:54:03.765Z",
+      "_id": "doc_ry902dhmu0y5i0l"
+    },
+    {
+      "patientId": "doc_z2pbih8mu0y5i0k",
+      "title": "Sunday Morning Tea & Music",
+      "personName": "Home & Comfort",
+      "relationship": "Cherished Moment",
+      "description": "Relaxing by the front window listening to favorite classic records while enjoying a warm cup of herbal tea.",
+      "photoUrl": "https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&auto=format&fit=crop&q=80",
+      "tags": [
+        "Music",
+        "Tea",
+        "Comfort"
+      ],
+      "dateEra": "Favorite Routine",
+      "createdAt": "2026-09-12T07:54:03.765Z",
+      "updatedAt": "2026-09-12T07:54:03.765Z",
+      "_id": "doc_2h9obm6mu0y5i0l"
+    },
+    {
+      "patientId": "doc_z2pbih8mu0y5i0k",
+      "title": "Peaceful Ocean Walk",
+      "personName": "Nature",
+      "relationship": "Scenic Memory",
+      "description": "Walking gently along the coast, feeling the fresh ocean breeze, hearing waves lap against the shore, and watching gulls.",
+      "photoUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=80",
+      "tags": [
+        "Nature",
+        "Beach",
+        "Calm"
+      ],
+      "dateEra": "Summer Memories",
+      "createdAt": "2026-09-11T07:54:03.765Z",
+      "updatedAt": "2026-09-11T07:54:03.765Z",
+      "_id": "doc_7aptedwmu0y5i0l"
+    },
+    {
+      "patientId": "doc_8yp98n1mu0yhz4a",
+      "title": "Family Garden Afternoon",
+      "personName": "Family & Loved Ones",
+      "relationship": "Family",
+      "description": "A warm and sunny afternoon gathered with loved ones on the back patio, surrounded by fresh flowers and laughter.",
+      "photoUrl": "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=600&auto=format&fit=crop&q=80",
+      "tags": [
+        "Family",
+        "Garden",
+        "Spring"
+      ],
+      "dateEra": "Recent Cherished Memory",
+      "createdAt": "2026-09-13T08:03:45.803Z",
+      "updatedAt": "2026-09-13T08:03:45.803Z",
+      "_id": "doc_3ad5wzrmu0yhz4b"
+    },
+    {
+      "patientId": "doc_8yp98n1mu0yhz4a",
+      "title": "Sunday Morning Tea & Music",
+      "personName": "Home & Comfort",
+      "relationship": "Cherished Moment",
+      "description": "Relaxing by the front window listening to favorite classic records while enjoying a warm cup of herbal tea.",
+      "photoUrl": "https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&auto=format&fit=crop&q=80",
+      "tags": [
+        "Music",
+        "Tea",
+        "Comfort"
+      ],
+      "dateEra": "Favorite Routine",
+      "createdAt": "2026-09-12T08:03:45.803Z",
+      "updatedAt": "2026-09-12T08:03:45.803Z",
+      "_id": "doc_4i5lmu3mu0yhz4b"
+    },
+    {
+      "patientId": "doc_8yp98n1mu0yhz4a",
+      "title": "Peaceful Ocean Walk",
+      "personName": "Nature",
+      "relationship": "Scenic Memory",
+      "description": "Walking gently along the coast, feeling the fresh ocean breeze, hearing waves lap against the shore, and watching gulls.",
+      "photoUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=80",
+      "tags": [
+        "Nature",
+        "Beach",
+        "Calm"
+      ],
+      "dateEra": "Summer Memories",
+      "createdAt": "2026-09-11T08:03:45.803Z",
+      "updatedAt": "2026-09-11T08:03:45.803Z",
+      "_id": "doc_19q8hpemu0yhz4b"
+    },
+    {
+      "patientId": "doc_f2niavwmu0ynb8m",
+      "title": "Family Garden Afternoon",
+      "personName": "Family & Loved Ones",
+      "relationship": "Family",
+      "description": "A warm and sunny afternoon gathered with loved ones on the back patio, surrounded by fresh flowers and laughter.",
+      "photoUrl": "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=600&auto=format&fit=crop&q=80",
+      "tags": [
+        "Family",
+        "Garden",
+        "Spring"
+      ],
+      "dateEra": "Recent Cherished Memory",
+      "createdAt": "2026-09-13T08:07:54.790Z",
+      "updatedAt": "2026-09-13T08:07:54.790Z",
+      "_id": "doc_772d4ckmu0ynb8m"
+    },
+    {
+      "patientId": "doc_f2niavwmu0ynb8m",
+      "title": "Sunday Morning Tea & Music",
+      "personName": "Home & Comfort",
+      "relationship": "Cherished Moment",
+      "description": "Relaxing by the front window listening to favorite classic records while enjoying a warm cup of herbal tea.",
+      "photoUrl": "https://images.unsplash.com/photo-1544717305-2782549b5136?w=600&auto=format&fit=crop&q=80",
+      "tags": [
+        "Music",
+        "Tea",
+        "Comfort"
+      ],
+      "dateEra": "Favorite Routine",
+      "createdAt": "2026-09-12T08:07:54.790Z",
+      "updatedAt": "2026-09-12T08:07:54.790Z",
+      "_id": "doc_x80r75kmu0ynb8m"
+    },
+    {
+      "patientId": "doc_f2niavwmu0ynb8m",
+      "title": "Peaceful Ocean Walk",
+      "personName": "Nature",
+      "relationship": "Scenic Memory",
+      "description": "Walking gently along the coast, feeling the fresh ocean breeze, hearing waves lap against the shore, and watching gulls.",
+      "photoUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=80",
+      "tags": [
+        "Nature",
+        "Beach",
+        "Calm"
+      ],
+      "dateEra": "Summer Memories",
+      "createdAt": "2026-09-11T08:07:54.790Z",
+      "updatedAt": "2026-09-11T08:07:54.790Z",
+      "_id": "doc_17m046wmu0ynb8m"
+    }
+  ],
+  "gameResults": [
+    {
+      "_id": "gr_1",
+      "patientId": "patient_eleanor",
+      "gameType": "memory-match",
+      "difficulty": "easy",
+      "score": 95,
+      "accuracy": 92,
+      "responseTimeMs": 3400,
+      "attempts": 6,
+      "mistakes": 1,
+      "completedAt": "2026-09-08T07:53:46.134Z"
+    },
+    {
+      "_id": "gr_2",
+      "patientId": "patient_eleanor",
+      "gameType": "picture-recall",
+      "difficulty": "easy",
+      "score": 90,
+      "accuracy": 88,
+      "responseTimeMs": 4100,
+      "attempts": 5,
+      "mistakes": 1,
+      "completedAt": "2026-09-09T07:53:46.134Z"
+    },
+    {
+      "_id": "gr_3",
+      "patientId": "patient_eleanor",
+      "gameType": "number-recall",
+      "difficulty": "easy",
+      "score": 85,
+      "accuracy": 84,
+      "responseTimeMs": 4500,
+      "attempts": 5,
+      "mistakes": 2,
+      "completedAt": "2026-09-10T07:53:46.134Z"
+    },
+    {
+      "_id": "gr_4",
+      "patientId": "patient_eleanor",
+      "gameType": "pattern-recognition",
+      "difficulty": "easy",
+      "score": 92,
+      "accuracy": 90,
+      "responseTimeMs": 3800,
+      "attempts": 5,
+      "mistakes": 1,
+      "completedAt": "2026-09-11T07:53:46.134Z"
+    },
+    {
+      "_id": "gr_5",
+      "patientId": "patient_eleanor",
+      "gameType": "memory-match",
+      "difficulty": "easy",
+      "score": 98,
+      "accuracy": 96,
+      "responseTimeMs": 2900,
+      "attempts": 6,
+      "mistakes": 0,
+      "completedAt": "2026-09-12T07:53:46.134Z"
+    },
+    {
+      "_id": "gr_6",
+      "patientId": "patient_eleanor",
+      "gameType": "picture-recall",
+      "difficulty": "easy",
+      "score": 94,
+      "accuracy": 92,
+      "responseTimeMs": 3200,
+      "attempts": 6,
+      "mistakes": 1,
+      "completedAt": "2026-09-13T07:53:46.134Z"
+    },
+    {
+      "_id": "gr_7",
+      "patientId": "patient_eleanor",
+      "gameType": "pattern-recognition",
+      "difficulty": "easy",
+      "score": 96,
+      "accuracy": 94,
+      "responseTimeMs": 3100,
+      "attempts": 5,
+      "mistakes": 0,
+      "completedAt": "2026-09-14T03:53:46.134Z"
+    },
+    {
+      "patientId": "doc_z2pbih8mu0y5i0k",
+      "gameType": "memory-match",
+      "difficulty": "easy",
+      "score": 92,
+      "accuracy": 90,
+      "responseTimeMs": 3500,
+      "attempts": 5,
+      "mistakes": 1,
+      "completedAt": "2026-09-14T06:54:03.765Z",
+      "_id": "doc_2x7lzcimu0y5i0l"
+    },
+    {
+      "patientId": "doc_8yp98n1mu0yhz4a",
+      "gameType": "memory-match",
+      "difficulty": "easy",
+      "score": 92,
+      "accuracy": 90,
+      "responseTimeMs": 3500,
+      "attempts": 5,
+      "mistakes": 1,
+      "completedAt": "2026-09-14T07:03:45.803Z",
+      "_id": "doc_enj9q5gmu0yhz4b"
+    },
+    {
+      "patientId": "doc_f2niavwmu0ynb8m",
+      "gameType": "memory-match",
+      "difficulty": "easy",
+      "score": 92,
+      "accuracy": 90,
+      "responseTimeMs": 3500,
+      "attempts": 5,
+      "mistakes": 1,
+      "completedAt": "2026-09-14T07:07:54.790Z",
+      "_id": "doc_u1ivscxmu0ynb8m"
+    }
+  ],
+  "reminders": [
+    {
+      "_id": "rem_1",
+      "patientId": "patient_eleanor",
+      "title": "Morning Blood Pressure Medication",
+      "time": "08:30",
+      "category": "medication",
+      "completed": true,
+      "recurrence": "Daily",
+      "soundEnabled": true,
+      "soundTune": "morning-bells",
+      "notes": "Take with a glass of water after toast.",
+      "createdAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "_id": "rem_2",
+      "patientId": "patient_eleanor",
+      "title": "Hydration - Drink Fresh Water",
+      "time": "10:30",
+      "category": "hydration",
+      "completed": true,
+      "recurrence": "Daily",
+      "soundEnabled": true,
+      "soundTune": "sunshine-tune",
+      "notes": "Keep the cozy blue mug filled.",
+      "createdAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "_id": "rem_3",
+      "patientId": "patient_eleanor",
+      "title": "Hearty Soup & Bread Lunch",
+      "time": "12:30",
+      "category": "meal",
+      "completed": false,
+      "recurrence": "Daily",
+      "soundEnabled": true,
+      "soundTune": "calm-forest",
+      "notes": "Warm tomato vegetable soup in the pantry.",
+      "createdAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "_id": "rem_4",
+      "patientId": "patient_eleanor",
+      "title": "Garden Walk with Sarah",
+      "time": "15:30",
+      "category": "activity",
+      "completed": false,
+      "recurrence": "Daily",
+      "soundEnabled": true,
+      "soundTune": "temple-chimes",
+      "notes": "Smell the fresh lavender and check on the roses.",
+      "createdAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "_id": "rem_5",
+      "patientId": "patient_eleanor",
+      "title": "Evening Vitamin D & Calcium",
+      "time": "19:00",
+      "category": "medication",
+      "completed": false,
+      "recurrence": "Daily",
+      "soundEnabled": true,
+      "soundTune": "gentle-harmony",
+      "notes": "With warm chamomile tea.",
+      "createdAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "_id": "rem_arthur_1",
+      "patientId": "patient_arthur",
+      "title": "Morning Heart & Blood Pressure Tablet",
+      "time": "08:30",
+      "category": "medication",
+      "completed": true,
+      "recurrence": "Daily",
+      "soundEnabled": true,
+      "soundTune": "morning-bells",
+      "notes": "Take with half glass of lukewarm water.",
+      "createdAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "_id": "rem_arthur_2",
+      "patientId": "patient_arthur",
+      "title": "Hydration - Fresh Water Cup",
+      "time": "11:00",
+      "category": "hydration",
+      "completed": false,
+      "recurrence": "Daily",
+      "soundEnabled": true,
+      "soundTune": "sunshine-tune",
+      "notes": "Drink a full glass from the kitchen pitcher.",
+      "createdAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "_id": "rem_arthur_3",
+      "patientId": "patient_arthur",
+      "title": "Afternoon Brain Stimulation Game",
+      "time": "15:30",
+      "category": "activity",
+      "completed": false,
+      "recurrence": "Daily",
+      "soundEnabled": true,
+      "soundTune": "calm-forest",
+      "notes": "Play 5 minutes of Picture Recall.",
+      "createdAt": "2026-09-14T07:53:46.134Z"
+    },
+    {
+      "patientId": "doc_z2pbih8mu0y5i0k",
+      "title": "Morning Water & Vitamin",
+      "time": "08:30 AM",
+      "category": "medication",
+      "completed": false,
+      "recurrence": "Daily",
+      "notes": "Take with a full glass of lukewarm water after breakfast.",
+      "createdAt": "2026-09-14T07:54:03.765Z",
+      "_id": "doc_sjz3loumu0y5i0l"
+    },
+    {
+      "patientId": "doc_z2pbih8mu0y5i0k",
+      "title": "Gentle Afternoon Stroll or Stretch",
+      "time": "02:00 PM",
+      "category": "activity",
+      "completed": false,
+      "recurrence": "Daily",
+      "notes": "Enjoy 15 minutes of light movement or sit in the fresh air.",
+      "createdAt": "2026-09-14T07:54:03.765Z",
+      "_id": "doc_h3ul3t8mu0y5i0l"
+    },
+    {
+      "patientId": "doc_z2pbih8mu0y5i0k",
+      "title": "Evening Memory Game & Relaxation",
+      "time": "07:30 PM",
+      "category": "activity",
+      "completed": false,
+      "recurrence": "Daily",
+      "notes": "Play a card match game to keep the mind sharp and relaxed.",
+      "createdAt": "2026-09-14T07:54:03.765Z",
+      "_id": "doc_pn0l03qmu0y5i0l"
+    },
+    {
+      "patientId": "doc_8yp98n1mu0yhz4a",
+      "title": "Morning Water & Vitamin",
+      "time": "08:30 AM",
+      "category": "medication",
+      "completed": false,
+      "recurrence": "Daily",
+      "notes": "Take with a full glass of lukewarm water after breakfast.",
+      "createdAt": "2026-09-14T08:03:45.803Z",
+      "_id": "doc_my3ygfamu0yhz4b"
+    },
+    {
+      "patientId": "doc_8yp98n1mu0yhz4a",
+      "title": "Gentle Afternoon Stroll or Stretch",
+      "time": "02:00 PM",
+      "category": "activity",
+      "completed": false,
+      "recurrence": "Daily",
+      "notes": "Enjoy 15 minutes of light movement or sit in the fresh air.",
+      "createdAt": "2026-09-14T08:03:45.803Z",
+      "_id": "doc_umwu1qvmu0yhz4b"
+    },
+    {
+      "patientId": "doc_8yp98n1mu0yhz4a",
+      "title": "Evening Memory Game & Relaxation",
+      "time": "07:30 PM",
+      "category": "activity",
+      "completed": false,
+      "recurrence": "Daily",
+      "notes": "Play a card match game to keep the mind sharp and relaxed.",
+      "createdAt": "2026-09-14T08:03:45.803Z",
+      "_id": "doc_92cyhtxmu0yhz4b"
+    },
+    {
+      "patientId": "doc_f2niavwmu0ynb8m",
+      "title": "Morning Water & Vitamin",
+      "time": "08:30 AM",
+      "category": "medication",
+      "completed": false,
+      "recurrence": "Daily",
+      "notes": "Take with a full glass of lukewarm water after breakfast.",
+      "createdAt": "2026-09-14T08:07:54.790Z",
+      "_id": "doc_l6tnqb0mu0ynb8m"
+    },
+    {
+      "patientId": "doc_f2niavwmu0ynb8m",
+      "title": "Gentle Afternoon Stroll or Stretch",
+      "time": "02:00 PM",
+      "category": "activity",
+      "completed": false,
+      "recurrence": "Daily",
+      "notes": "Enjoy 15 minutes of light movement or sit in the fresh air.",
+      "createdAt": "2026-09-14T08:07:54.790Z",
+      "_id": "doc_in2lqvbmu0ynb8m"
+    },
+    {
+      "patientId": "doc_f2niavwmu0ynb8m",
+      "title": "Evening Memory Game & Relaxation",
+      "time": "07:30 PM",
+      "category": "activity",
+      "completed": false,
+      "recurrence": "Daily",
+      "notes": "Play a card match game to keep the mind sharp and relaxed.",
+      "createdAt": "2026-09-14T08:07:54.790Z",
+      "_id": "doc_hky1a4dmu0ynb8m"
+    }
+  ],
+  "conversations": [
+    {
+      "_id": "conv_eleanor",
+      "patientId": "patient_eleanor",
+      "messages": [
+        {
+          "id": "msg_1",
+          "role": "assistant",
+          "content": "Hello Eleanor! I am your MindCare memory companion. I am here to help you remember your favorite memories, people, and daily schedule. What would you like to talk about today?",
+          "timestamp": "2026-09-14T05:53:46.134Z"
+        }
+      ],
+      "lastInteraction": "2026-09-14T05:53:46.134Z"
+    },
+    {
+      "patientId": "doc_z2pbih8mu0y5i0k",
+      "messages": [
+        {
+          "id": "msg_init_1789372443765",
+          "role": "assistant",
+          "content": "Hello Grandpa Robert! I am your MindCare memory companion. I am here to help you remember your favorite memories, people, and daily schedule. What would you like to talk about today?",
+          "timestamp": "2026-09-14T07:54:03.765Z"
+        }
+      ],
+      "lastInteraction": "2026-09-14T07:54:03.765Z",
+      "_id": "doc_p4vuld9mu0y5i0l"
+    },
+    {
+      "patientId": "doc_8yp98n1mu0yhz4a",
+      "messages": [
+        {
+          "id": "msg_init_1789373025803",
+          "role": "assistant",
+          "content": "Hello Test Patient! I am your MindCare memory companion. I am here to help you remember your favorite memories, people, and daily schedule. What would you like to talk about today?",
+          "timestamp": "2026-09-14T08:03:45.803Z"
+        }
+      ],
+      "lastInteraction": "2026-09-14T08:03:45.803Z",
+      "_id": "doc_h0xyj5rmu0yhz4b"
+    },
+    {
+      "patientId": "doc_f2niavwmu0ynb8m",
+      "messages": [
+        {
+          "id": "msg_init_1789373274790",
+          "role": "assistant",
+          "content": "Hello Test Debugger! I am your MindCare memory companion. I am here to help you remember your favorite memories, people, and daily schedule. What would you like to talk about today?",
+          "timestamp": "2026-09-14T08:07:54.790Z"
+        }
+      ],
+      "lastInteraction": "2026-09-14T08:07:54.790Z",
+      "_id": "doc_utkzqi5mu0ynb8m"
+    }
+  ],
+  "notifications": [
+    {
+      "_id": "notif_1",
+      "patientId": "patient_eleanor",
+      "caregiverId": "caregiver_sarah",
+      "title": "Activity Completed",
+      "message": "Eleanor completed the Memory Match game with 96% accuracy!",
+      "type": "game_completed",
+      "read": false,
+      "createdAt": "2026-09-14T04:53:46.134Z"
+    },
+    {
+      "_id": "notif_2",
+      "patientId": "patient_eleanor",
+      "caregiverId": "caregiver_sarah",
+      "title": "Reminder Checked",
+      "message": "Morning Blood Pressure Medication marked as completed at 8:32 AM.",
+      "type": "reminder_due",
+      "read": true,
+      "createdAt": "2026-09-14T01:53:46.134Z"
+    },
+    {
+      "patientId": "doc_z2pbih8mu0y5i0k",
+      "title": "Welcome to MindCare!",
+      "message": "Welcome Grandpa Robert. Your personal memory book, cognitive brain games, and daily reminders are ready and saved in your secure database.",
+      "type": "note",
+      "read": false,
+      "createdAt": "2026-09-14T07:54:03.765Z",
+      "_id": "doc_blrmxhtmu0y5i0l"
+    },
+    {
+      "patientId": "doc_8yp98n1mu0yhz4a",
+      "title": "Welcome to MindCare!",
+      "message": "Welcome Test Patient. Your personal memory book, cognitive brain games, and daily reminders are ready and saved in your secure database.",
+      "type": "note",
+      "read": false,
+      "createdAt": "2026-09-14T08:03:45.803Z",
+      "_id": "doc_09q1ggdmu0yhz4b"
+    },
+    {
+      "patientId": "doc_f2niavwmu0ynb8m",
+      "title": "Welcome to MindCare!",
+      "message": "Welcome Test Debugger. Your personal memory book, cognitive brain games, and daily reminders are ready and saved in your secure database.",
+      "type": "note",
+      "read": false,
+      "createdAt": "2026-09-14T08:07:54.790Z",
+      "_id": "doc_gw1xkzhmu0ynb8m"
+    }
+  ]
+}
