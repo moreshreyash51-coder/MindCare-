@@ -26,12 +26,13 @@ interface AuthModalProps {
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
-  const { user, login, register, logout, updateUser } = useAuth();
+  const { user, login, register, logout, updateUser, rememberedEmail } = useAuth();
 
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [name, setName] = useState('');
   const [role, setRole] = useState<'patient' | 'caregiver'>('patient');
   const [selectedGender, setSelectedGender] = useState<'female' | 'male'>('female');
@@ -49,13 +50,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       if (user) {
         setSelectedGender((user.gender as 'female' | 'male') || 'female');
         setSelectedAvatar(user.avatar || '');
+      } else if (rememberedEmail) {
+        setEmail(rememberedEmail);
       }
       api
         .getDatabaseStatus()
         .then(setDbStatus)
         .catch((e) => console.warn('Could not fetch DB status:', e));
     }
-  }, [isOpen, user]);
+  }, [isOpen, user, rememberedEmail]);
 
   if (!isOpen) return null;
 
@@ -66,25 +69,30 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
 
     try {
       if (mode === 'login') {
-        await login(email, password);
+        await login(email, password, rememberMe);
       } else {
-        await register({
-          name,
-          email,
-          role,
-          gender: selectedGender,
-          avatar: selectedAvatar || (selectedGender === 'male' ? DEFAULT_MALE_PATIENT_AVATAR : DEFAULT_FEMALE_PATIENT_AVATAR),
-          password,
-          language: 'en',
-          cognitiveDifficulty: 'easy',
-          accessibilitySettings: {
-            fontSize: 'large',
-            highContrast: false,
-            voiceAssistance: true,
-            speechRate: 0.9,
-            simpleNavigation: true,
+        await register(
+          {
+            name,
+            email,
+            role,
+            gender: selectedGender,
+            avatar:
+              selectedAvatar ||
+              (selectedGender === 'male' ? DEFAULT_MALE_PATIENT_AVATAR : DEFAULT_FEMALE_PATIENT_AVATAR),
+            password,
+            language: 'en',
+            cognitiveDifficulty: 'easy',
+            accessibilitySettings: {
+              fontSize: 'large',
+              highContrast: false,
+              voiceAssistance: true,
+              speechRate: 0.9,
+              simpleNavigation: true,
+            },
           },
-        });
+          rememberMe
+        );
       }
       onClose();
     } catch (err: any) {
@@ -418,6 +426,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
+              <div className="flex items-center gap-2 pt-1 pb-1">
+                <input
+                  id="modal-remember-me"
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded-sm border-slate-300 text-teal-700 focus:ring-teal-500 cursor-pointer"
+                />
+                <label htmlFor="modal-remember-me" className="text-xs font-semibold text-slate-700 cursor-pointer">
+                  Remember me on this device
+                </label>
+              </div>
 
               <button
                 type="submit"

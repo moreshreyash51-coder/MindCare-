@@ -1,5 +1,7 @@
 import bcrypt from 'bcryptjs';
 import mongoose, { Schema, Model } from 'mongoose';
+import fs from 'fs';
+import path from 'path';
 
 // MongoDB / Mongoose compatible interfaces and schema definitions
 
@@ -806,8 +808,63 @@ const initialNotifications: INotification[] = [
   },
 ];
 
+// -------------------------------------------------------------
+// Persistent Local Datastore Engine (Disk-Backed & Resilient)
+// -------------------------------------------------------------
+
+const DATA_DIR = path.resolve(process.cwd(), 'data');
+const DB_FILE = path.join(DATA_DIR, 'mindcare_db.json');
+
+interface IPersistentData {
+  users: IUser[];
+  memories: IMemory[];
+  gameResults: IGameResult[];
+  reminders: IReminder[];
+  conversations: IConversation[];
+  notifications: INotification[];
+}
+
+function loadFromDisk(): IPersistentData | null {
+  try {
+    if (fs.existsSync(DB_FILE)) {
+      const raw = fs.readFileSync(DB_FILE, 'utf-8');
+      if (raw && raw.trim().length > 0) {
+        return JSON.parse(raw);
+      }
+    }
+  } catch (err) {
+    console.warn('Could not read persistent DB file from disk:', err);
+  }
+  return null;
+}
+
+let saveTimeout: NodeJS.Timeout | null = null;
+function scheduleSave() {
+  if (saveTimeout) clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => {
+    try {
+      if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+      }
+      const data: IPersistentData = {
+        users: memoryStore.users.getAll(),
+        memories: memoryStore.memories.getAll(),
+        gameResults: memoryStore.gameResults.getAll(),
+        reminders: memoryStore.reminders.getAll(),
+        conversations: memoryStore.conversations.getAll(),
+        notifications: memoryStore.notifications.getAll(),
+      };
+      const tempFile = `${DB_FILE}.tmp_${Date.now()}`;
+      fs.writeFileSync(tempFile, JSON.stringify(data, null, 2), 'utf-8');
+      fs.renameSync(tempFile, DB_FILE);
+    } catch (err) {
+      console.warn('Could not save database state to disk:', err);
+    }
+  }, 50);
+}
+
 /**
- * Robust in-memory & fallback MongoDB collection
+ * Robust disk-persisted & fallback MongoDB collection
  * Used when MongoDB is offline or in container preview without external connection string.
  */
 class MemoryMongoCollection<T extends { _id: string }> {
@@ -817,11 +874,21 @@ class MemoryMongoCollection<T extends { _id: string }> {
     initialData.forEach((item) => this.items.set(item._id, { ...item }));
   }
 
+  getAll(): T[] {
+    return Array.from(this.items.values());
+  }
+
   async find(query: Partial<Record<keyof T, any>> = {}): Promise<T[]> {
     const list = Array.from(this.items.values());
     return list.filter((item) => {
       for (const [key, val] of Object.entries(query)) {
-        if (item[key as keyof T] !== val) return false;
+        const itemVal = item[key as keyof T];
+        // Special case for email: case-insensitive & trimmed comparison
+        if (key === 'email' && typeof val === 'string' && typeof itemVal === 'string') {
+          if (itemVal.trim().toLowerCase() !== val.trim().toLowerCase()) return false;
+          continue;
+        }
+        if (itemVal !== val) return false;
       }
       return true;
     });
@@ -841,6 +908,7 @@ class MemoryMongoCollection<T extends { _id: string }> {
     const _id = doc._id || 'doc_' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
     const full = { ...doc, _id } as T;
     this.items.set(_id, full);
+    scheduleSave();
     return { ...full };
   }
 
@@ -849,6 +917,7 @@ class MemoryMongoCollection<T extends { _id: string }> {
     if (!existing) return null;
     const updated = { ...existing, ...update, updatedAt: new Date().toISOString() };
     this.items.set(id, updated);
+    scheduleSave();
     return { ...updated };
   }
 
@@ -856,6 +925,7 @@ class MemoryMongoCollection<T extends { _id: string }> {
     const existing = this.items.get(id);
     if (!existing) return null;
     this.items.delete(id);
+    scheduleSave();
     return existing;
   }
 
@@ -865,32 +935,72 @@ class MemoryMongoCollection<T extends { _id: string }> {
   }
 }
 
-// In-memory instances
+// Initialize persistent data from disk if available, otherwise seed initial data
+const diskData = loadFromDisk();
+
+// Merge initial demo users with any saved users so demo profiles never vanish
+const mergedUsers: IUser[] = [...initialUsers];
+if (diskData?.users) {
+  for (const u of diskData.users) {
+    const idx = mergedUsers.findIndex((m) => m._id === u._id);
+    if (idx >= 0) {
+      mergedUsers[idx] = u;
+    } else {
+      mergedUsers.push(u);
+    }
+  }
+}
+
+// In-memory instances with disk persistence
 const memoryStore = {
-  users: new MemoryMongoCollection<IUser>(initialUsers),
-  memories: new MemoryMongoCollection<IMemory>(initialMemories),
-  gameResults: new MemoryMongoCollection<IGameResult>(initialGameResults),
-  reminders: new MemoryMongoCollection<IReminder>(initialReminders),
-  conversations: new MemoryMongoCollection<IConversation>(initialConversations),
-  notifications: new MemoryMongoCollection<INotification>(initialNotifications),
+  users: new MemoryMongoCollection<IUser>(mergedUsers),
+  memories: new MemoryMongoCollection<IMemory>(diskData?.memories?.length ? diskData.memories : initialMemories),
+  gameResults: new MemoryMongoCollection<IGameResult>(diskData?.gameResults?.length ? diskData.gameResults : initialGameResults),
+  reminders: new MemoryMongoCollection<IReminder>(diskData?.reminders?.length ? diskData.reminders : initialReminders),
+  conversations: new MemoryMongoCollection<IConversation>(diskData?.conversations?.length ? diskData.conversations : initialConversations),
+  notifications: new MemoryMongoCollection<INotification>(diskData?.notifications?.length ? diskData.notifications : initialNotifications),
 };
+
+// Immediate first save to ensure file structure is established
+scheduleSave();
 
 // Database Connection Manager
 let isMongoConnected = false;
 let mongoConnectionError: string | null = null;
+let lastMongoAttemptTime = 0;
+const MONGO_RETRY_INTERVAL_MS = 60000; // 1 minute backoff between connection attempts
 let dbInitPromise: Promise<{ isConnected: boolean; message: string }> | null = null;
 
 export async function ensureDatabase(): Promise<{ isConnected: boolean; message: string }> {
-  if (mongoose.connection.readyState === 1 && isMongoConnected) {
+  if (isMongoConnected && mongoose.connection.readyState === 1) {
     return {
       isConnected: true,
       message: `Connected to MongoDB database "${mongoose.connection.name}"`,
     };
   }
 
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    return {
+      isConnected: false,
+      message: 'Operating with persistent disk-backed local database store',
+    };
+  }
+
+  // Prevent repeated 3-second hangs if MongoDB is unreachable
+  const now = Date.now();
+  if (now - lastMongoAttemptTime < MONGO_RETRY_INTERVAL_MS && mongoConnectionError) {
+    return {
+      isConnected: false,
+      message: mongoConnectionError,
+    };
+  }
+
   if (!dbInitPromise) {
+    lastMongoAttemptTime = now;
     dbInitPromise = initDatabase().catch((err: any) => {
       console.warn('MongoDB initialization caught error:', err);
+      mongoConnectionError = err.message || 'Connection failed';
       dbInitPromise = null;
       return {
         isConnected: false,
@@ -906,17 +1016,17 @@ export async function initDatabase(): Promise<{ isConnected: boolean; message: s
   const uri = process.env.MONGODB_URI;
 
   if (!uri) {
-    console.log('ℹ️ MONGODB_URI not set. Using built-in resilient in-memory MongoDB driver with full schema support.');
+    console.log('ℹ️ MONGODB_URI not set. Using persistent disk-backed local database store.');
     return {
       isConnected: false,
-      message: 'Operating with built-in resilient in-memory MongoDB datastore',
+      message: 'Operating with persistent disk-backed local database store',
     };
   }
 
   try {
     console.log('Connecting to MongoDB database...');
     await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 3000,
+      serverSelectionTimeoutMS: 2000,
     });
     isMongoConnected = true;
     mongoConnectionError = null;
@@ -932,10 +1042,11 @@ export async function initDatabase(): Promise<{ isConnected: boolean; message: s
   } catch (err: any) {
     isMongoConnected = false;
     mongoConnectionError = err.message || 'Connection failed';
-    console.warn('⚠️ MongoDB connection attempt failed. Seamlessly running with built-in resilient in-memory datastore:', err.message);
+    lastMongoAttemptTime = Date.now();
+    console.warn('⚠️ MongoDB connection attempt failed. Seamlessly running with persistent disk-backed store:', err.message);
     return {
       isConnected: false,
-      message: `MongoDB connection failed: ${err.message}. Using built-in fallback.`,
+      message: `MongoDB connection failed: ${err.message}. Using persistent disk-backed store.`,
     };
   }
 }
@@ -1099,7 +1210,7 @@ export async function getDatabaseStatus() {
   return {
     isMongoConnected,
     mongoConnectionError,
-    engine: isMongoConnected ? 'MongoDB (Mongoose ODM)' : 'In-Memory MongoDB Driver (Resilient)',
+    engine: isMongoConnected ? 'MongoDB (Mongoose ODM)' : 'Persistent Local Database (Disk-Backed & Resilient)',
     databaseName: isMongoConnected ? mongoose.connection.name : 'mindcare_local',
     uriConfigured: Boolean(process.env.MONGODB_URI),
     counts: {

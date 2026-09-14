@@ -31,7 +31,7 @@ import {
 } from '../../types';
 
 export const AuthLandingView: React.FC = () => {
-  const { login, register } = useAuth();
+  const { login, register, rememberedEmail, rememberedAccounts, quickSignInAsAccount } = useAuth();
   const { speakText, fontSize } = useAccessibility();
 
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
@@ -41,6 +41,26 @@ export const AuthLandingView: React.FC = () => {
   const [loginPassword, setLoginPassword] = useState('');
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
+
+  // Auto-populate remembered email and default demo credentials if applicable
+  React.useEffect(() => {
+    if (rememberedEmail) {
+      setLoginEmail(rememberedEmail);
+      if (
+        rememberedEmail === 'eleanor@example.com' ||
+        rememberedEmail === 'sarah@example.com' ||
+        rememberedEmail === 'arthur@example.com'
+      ) {
+        setLoginPassword('password123');
+      }
+    } else if (rememberedAccounts && rememberedAccounts.length > 0) {
+      const top = rememberedAccounts[0];
+      setLoginEmail(top.email);
+      if (top.isDemo) {
+        setLoginPassword('password123');
+      }
+    }
+  }, [rememberedEmail, rememberedAccounts]);
 
   // Register form state
   const [regName, setRegName] = useState('');
@@ -110,7 +130,7 @@ export const AuthLandingView: React.FC = () => {
 
     setActionLoading(true);
     try {
-      await login(cleanEmail, loginPassword);
+      await login(cleanEmail, loginPassword, rememberMe);
       speakText('Welcome back to MindCare! Signing you in now.');
     } catch (err: any) {
       const msg =
@@ -167,30 +187,33 @@ export const AuthLandingView: React.FC = () => {
 
     setActionLoading(true);
     try {
-      await register({
-        name: cleanName,
-        email: cleanEmail,
-        password: regPassword,
-        role: regRole,
-        gender: regGender,
-        avatar: regAvatar || (regGender === 'male' ? DEFAULT_MALE_PATIENT_AVATAR : DEFAULT_FEMALE_PATIENT_AVATAR),
-        emergencyContact: regEmergencyName
-          ? {
-              name: regEmergencyName,
-              phone: regEmergencyPhone || '(555) 234-5678',
-              relation: regEmergencyRelation || (regRole === 'patient' ? 'Family Member' : 'Patient'),
-            }
-          : undefined,
-        language: 'en',
-        cognitiveDifficulty: 'easy',
-        accessibilitySettings: {
-          fontSize: 'large',
-          highContrast: false,
-          voiceAssistance: true,
-          speechRate: 0.9,
-          simpleNavigation: true,
+      await register(
+        {
+          name: cleanName,
+          email: cleanEmail,
+          password: regPassword,
+          role: regRole,
+          gender: regGender,
+          avatar: regAvatar || (regGender === 'male' ? DEFAULT_MALE_PATIENT_AVATAR : DEFAULT_FEMALE_PATIENT_AVATAR),
+          emergencyContact: regEmergencyName
+            ? {
+                name: regEmergencyName,
+                phone: regEmergencyPhone || '(555) 234-5678',
+                relation: regEmergencyRelation || (regRole === 'patient' ? 'Family Member' : 'Patient'),
+              }
+            : undefined,
+          language: 'en',
+          cognitiveDifficulty: 'easy',
+          accessibilitySettings: {
+            fontSize: 'large',
+            highContrast: false,
+            voiceAssistance: true,
+            speechRate: 0.9,
+            simpleNavigation: true,
+          },
         },
-      });
+        rememberMe
+      );
       speakText(`Welcome to MindCare, ${cleanName}! Your account and secure database records have been established.`);
     } catch (err: any) {
       const msg = err.message || 'Could not create account. That email may already be in use.';
@@ -305,6 +328,36 @@ export const AuthLandingView: React.FC = () => {
           <div className="flex-1">
             <h4 className="font-extrabold text-sm sm:text-base">Notice</h4>
             <p className="text-sm">{error}</p>
+            {/* Quick Action Recovery */}
+            {activeTab === 'login' && error.toLowerCase().includes('no account') && (
+              <button
+                type="button"
+                onClick={() => {
+                  setRegEmail(loginEmail);
+                  setActiveTab('register');
+                  setError(null);
+                  speakText(`Switched to Create Account with email ${loginEmail}`);
+                }}
+                className="mt-3 inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs px-3.5 py-2 rounded-xl shadow-xs cursor-pointer transition-all"
+              >
+                <UserPlus className="w-4 h-4" />
+                <span>Create New Account with {loginEmail}</span>
+              </button>
+            )}
+            {activeTab === 'login' && error.toLowerCase().includes('password') && (
+              <button
+                type="button"
+                onClick={() => {
+                  setLoginPassword('password123');
+                  setError(null);
+                  speakText('Populated default demo password');
+                }}
+                className="mt-3 inline-flex items-center gap-2 bg-teal-700 hover:bg-teal-800 text-white font-extrabold text-xs px-3.5 py-2 rounded-xl shadow-xs cursor-pointer transition-all ml-2"
+              >
+                <Check className="w-4 h-4" />
+                <span>Use Demo Password (password123)</span>
+              </button>
+            )}
           </div>
           <button
             type="button"
@@ -325,6 +378,63 @@ export const AuthLandingView: React.FC = () => {
               Access your personal memory exercises, medication reminders, and family photos.
             </p>
           </div>
+
+          {/* Quick Profile Access (Remembered on this device) */}
+          {rememberedAccounts && rememberedAccounts.length > 0 && (
+            <div id="saved-profiles-panel" className="bg-teal-50/70 border-2 border-teal-200/80 rounded-2xl p-4 sm:p-5 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                  <span className="text-xs font-black uppercase tracking-wider text-teal-900">
+                    Saved Profiles on This Device
+                  </span>
+                </div>
+                <span className="text-xs font-bold text-teal-700 bg-white px-2.5 py-1 rounded-full border border-teal-200 shadow-2xs">
+                  1-Tap Fast Access
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {rememberedAccounts.slice(0, 3).map((account) => {
+                  const isSelected = loginEmail.toLowerCase() === account.email.toLowerCase();
+                  return (
+                    <button
+                      key={account.email}
+                      type="button"
+                      onClick={() => {
+                        setLoginEmail(account.email);
+                        if (account.isDemo) {
+                          setLoginPassword('password123');
+                        }
+                        speakText(`Selected profile ${account.name}`);
+                      }}
+                      className={`p-3 rounded-2xl border-2 text-left transition-all flex items-center gap-3 cursor-pointer group ${
+                        isSelected
+                          ? 'bg-white border-teal-600 shadow-sm ring-2 ring-teal-500/20'
+                          : 'bg-white/80 border-teal-100 hover:border-teal-300 hover:bg-white'
+                      }`}
+                    >
+                      <img
+                        src={
+                          account.avatar ||
+                          (account.gender === 'male' ? DEFAULT_MALE_PATIENT_AVATAR : DEFAULT_FEMALE_PATIENT_AVATAR)
+                        }
+                        alt={account.name}
+                        className="w-11 h-11 rounded-full object-cover border-2 border-teal-200 group-hover:scale-105 transition-transform shrink-0"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <p className="font-extrabold text-sm text-slate-900 truncate leading-tight">{account.name}</p>
+                        <p className="text-[11px] font-bold text-teal-700 capitalize mt-0.5">
+                          {account.role === 'patient' ? 'Senior Patient' : 'Family Caregiver'}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <form onSubmit={handleLoginSubmit} className="space-y-6">
             {/* Email Field */}

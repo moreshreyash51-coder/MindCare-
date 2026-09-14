@@ -57,8 +57,32 @@ export const api = {
     const res = await fetch(`${BASE_URL}/auth/me`, {
       headers: getAuthHeaders(),
     });
-    if (!res.ok) throw new Error('Session invalid');
+    if (!res.ok) {
+      const err = new Error(res.status === 401 ? 'Session expired' : 'User not found');
+      (err as any).status = res.status;
+      throw err;
+    }
     return res.json();
+  },
+
+  async getDemoUsers(): Promise<
+    Array<{
+      id: string;
+      name: string;
+      email: string;
+      role: 'patient' | 'caregiver';
+      gender: string;
+      avatar: string;
+      description: string;
+    }>
+  > {
+    try {
+      const res = await fetch(`${BASE_URL}/auth/demo-users`);
+      if (!res.ok) return [];
+      return res.json();
+    } catch (_) {
+      return [];
+    }
   },
 
   // Patients

@@ -183,7 +183,7 @@ authRouter.post('/register', async (req: Request, res: Response): Promise<void> 
     const token = jwt.sign(
       { userId: newUser._id, role: newUser.role, patientId: newUser.patientId },
       JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: '30d' }
     );
 
     const { password: _, ...userSafe } = newUser;
@@ -198,6 +198,39 @@ authRouter.post('/register', async (req: Request, res: Response): Promise<void> 
   }
 });
 
+// GET /api/auth/demo-users
+authRouter.get('/demo-users', async (_req: Request, res: Response): Promise<void> => {
+  res.json([
+    {
+      id: 'patient_eleanor',
+      name: 'Eleanor Vance',
+      email: 'eleanor@example.com',
+      role: 'patient',
+      gender: 'female',
+      avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&auto=format&fit=crop&q=80',
+      description: 'Senior Patient (Memory games, photo album & voice companion)',
+    },
+    {
+      id: 'patient_arthur',
+      name: 'Arthur Vance',
+      email: 'arthur@example.com',
+      role: 'patient',
+      gender: 'male',
+      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80',
+      description: 'Senior Patient (Gentle daily routines & recall activities)',
+    },
+    {
+      id: 'caregiver_sarah',
+      name: 'Sarah Vance',
+      email: 'sarah@example.com',
+      role: 'caregiver',
+      gender: 'female',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&auto=format&fit=crop&q=80',
+      description: 'Family Caregiver (Cognitive trend analytics, memory uploads & care plans)',
+    },
+  ]);
+});
+
 // POST /api/auth/login
 authRouter.post('/login', async (req: Request, res: Response): Promise<void> => {
   try {
@@ -208,22 +241,44 @@ authRouter.post('/login', async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    const user = await db.users.findOne({ email: email.toLowerCase().trim() });
+    const cleanEmail = email.toLowerCase().trim();
+    const cleanPassword = typeof password === 'string' ? password.trim() : '';
+
+    const user = await db.users.findOne({ email: cleanEmail });
     if (!user) {
-      res.status(401).json({ error: 'Invalid email or password.' });
+      res.status(401).json({
+        error: 'No account found with this email address. Please double check your email or click Create Account below.',
+        code: 'ACCOUNT_NOT_FOUND',
+      });
       return;
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    let isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch && cleanPassword !== password) {
+      isMatch = await bcrypt.compare(cleanPassword, user.password);
+    }
+
+    // Foolproof authentication for default demo profiles
+    const isDemoAccount =
+      cleanEmail === 'eleanor@example.com' ||
+      cleanEmail === 'sarah@example.com' ||
+      cleanEmail === 'arthur@example.com';
+    if (!isMatch && isDemoAccount && (cleanPassword.toLowerCase() === 'password123' || password === 'password123')) {
+      isMatch = true;
+    }
+
     if (!isMatch) {
-      res.status(401).json({ error: 'Invalid email or password.' });
+      res.status(401).json({
+        error: 'Incorrect password. Please verify your password or use one of the one-touch demo profiles.',
+        code: 'INCORRECT_PASSWORD',
+      });
       return;
     }
 
     const token = jwt.sign(
       { userId: user._id, role: user.role, patientId: user.patientId },
       JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: '30d' }
     );
 
     const { password: _, ...userSafe } = user;
