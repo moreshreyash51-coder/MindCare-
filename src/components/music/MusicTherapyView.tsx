@@ -19,6 +19,7 @@ import {
   Radio,
   Headphones,
   Compass,
+  ExternalLink,
 } from 'lucide-react';
 import { useAccessibility } from '../../context/AccessibilityContext';
 import { SongTrack, SongCategory, CustomSongInput } from '../../types';
@@ -174,45 +175,71 @@ export const MusicTherapyView: React.FC<MusicTherapyViewProps> = ({ onBack, pati
         <div className="absolute top-0 right-0 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
-          {/* Album Artwork & Visualizer */}
+          {/* Album Artwork & Visualizer / Video Deck */}
           <div className="lg:col-span-5 flex flex-col items-center sm:items-start text-center sm:text-left">
-            <div className="relative group w-48 h-48 sm:w-56 sm:h-56 rounded-3xl overflow-hidden shadow-2xl border-4 border-white/20">
-              <img
-                src={
-                  currentSong?.coverImage ||
-                  'https://images.unsplash.com/photo-1520523839898-507125cd53c1?w=500&auto=format&fit=crop&q=80'
-                }
-                alt={currentSong?.title || 'Relaxing Music'}
-                referrerPolicy="no-referrer"
-                className={`w-full h-full object-cover transition-transform duration-700 ${
-                  isPlaying ? 'scale-105' : 'scale-100'
-                }`}
-              />
-
-              {/* Glowing playback status badge */}
-              <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white flex items-center gap-1.5 border border-white/20">
-                <span
-                  className={`w-2 h-2 rounded-full ${
-                    isPlaying ? 'bg-emerald-400 animate-ping' : 'bg-slate-400'
-                  }`}
+            <div className="relative group w-full max-w-[280px] sm:max-w-[320px] aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border-4 border-white/20 bg-slate-950">
+              {currentSong?.youtubeId && isPlaying ? (
+                <iframe
+                  id="music-video-embed"
+                  src={`https://www.youtube-nocookie.com/embed/${currentSong.youtubeId}?autoplay=1&enablejsapi=1&rel=0`}
+                  title={currentSong.title}
+                  className="w-full h-full border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
                 />
-                <span>{isPlaying ? 'Playing Now' : 'Paused'}</span>
-              </div>
+              ) : (
+                <div className="w-full h-full relative">
+                  <img
+                    src={
+                      currentSong?.coverImage ||
+                      'https://images.unsplash.com/photo-1520523839898-507125cd53c1?w=500&auto=format&fit=crop&q=80'
+                    }
+                    alt={currentSong?.title || 'Relaxing Music'}
+                    referrerPolicy="no-referrer"
+                    className={`w-full h-full object-cover transition-transform duration-700 ${
+                      isPlaying ? 'scale-105' : 'scale-100'
+                    }`}
+                  />
 
-              {/* Visualizer Sound Waves Overlay */}
-              {isPlaying && (
-                <div className="absolute bottom-3 right-3 left-3 bg-black/60 backdrop-blur-md px-4 py-2 rounded-2xl flex items-center justify-between border border-white/20">
-                  <span className="text-[11px] font-bold text-teal-300 flex items-center gap-1">
-                    <Radio className="w-3.5 h-3.5 text-teal-400 animate-pulse" />
-                    {isSynthesizing ? 'Peaceful Chimes' : 'Therapy Audio'}
-                  </span>
-                  {/* Dynamic bouncing equalizer bars */}
-                  <div className="flex items-end gap-1 h-4">
-                    <span className="w-1 bg-teal-400 rounded-full animate-bounce [animation-delay:0.1s] h-3" />
-                    <span className="w-1 bg-teal-300 rounded-full animate-bounce [animation-delay:0.3s] h-4" />
-                    <span className="w-1 bg-emerald-400 rounded-full animate-bounce [animation-delay:0.2s] h-2" />
-                    <span className="w-1 bg-teal-200 rounded-full animate-bounce [animation-delay:0.4s] h-3.5" />
+                  {/* Glowing playback status badge */}
+                  <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white flex items-center gap-1.5 border border-white/20">
+                    <span
+                      className={`w-2 h-2 rounded-full ${
+                        isPlaying ? 'bg-emerald-400 animate-ping' : 'bg-slate-400'
+                      }`}
+                    />
+                    <span>{isPlaying ? 'Playing Now' : 'Ready'}</span>
                   </div>
+
+                  {/* Play Button Overlay on image */}
+                  <button
+                    onClick={() => {
+                      if (currentSong) {
+                        musicService.playSong(currentSong);
+                      }
+                    }}
+                    className="absolute inset-0 m-auto w-16 h-16 rounded-full bg-emerald-500/90 hover:bg-emerald-400 text-white flex items-center justify-center shadow-2xl transition-all hover:scale-110 active:scale-95 cursor-pointer"
+                    aria-label="Play song"
+                  >
+                    <Play className="w-8 h-8 fill-current translate-x-0.5" />
+                  </button>
+
+                  {/* Visualizer Sound Waves Overlay */}
+                  {isPlaying && (
+                    <div className="absolute bottom-3 right-3 left-3 bg-black/60 backdrop-blur-md px-4 py-2 rounded-2xl flex items-center justify-between border border-white/20">
+                      <span className="text-[11px] font-bold text-teal-300 flex items-center gap-1">
+                        <Radio className="w-3.5 h-3.5 text-teal-400 animate-pulse" />
+                        Official Track
+                      </span>
+                      {/* Dynamic bouncing equalizer bars */}
+                      <div className="flex items-end gap-1 h-4">
+                        <span className="w-1 bg-teal-400 rounded-full animate-bounce [animation-delay:0.1s] h-3" />
+                        <span className="w-1 bg-teal-300 rounded-full animate-bounce [animation-delay:0.3s] h-4" />
+                        <span className="w-1 bg-emerald-400 rounded-full animate-bounce [animation-delay:0.2s] h-2" />
+                        <span className="w-1 bg-teal-200 rounded-full animate-bounce [animation-delay:0.4s] h-3.5" />
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -227,6 +254,17 @@ export const MusicTherapyView: React.FC<MusicTherapyViewProps> = ({ onBack, pati
                   <span className="text-xs font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-400/30">
                     My Song
                   </span>
+                )}
+                {currentSong?.youtubeId && (
+                  <a
+                    href={`https://www.youtube.com/watch?v=${currentSong.youtubeId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] font-bold text-teal-300 hover:text-white bg-white/10 hover:bg-white/20 px-2 py-0.5 rounded-md transition-colors"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    <span>Watch Video</span>
+                  </a>
                 )}
               </div>
 
@@ -430,12 +468,10 @@ export const MusicTherapyView: React.FC<MusicTherapyViewProps> = ({ onBack, pati
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
           {[
             { id: 'all', label: t('allSongs'), icon: '🎶' },
-            { id: 'bollywood', label: t('bollywoodClassics'), icon: '🪷' },
-            { id: 'northeast', label: t('northEastSongs'), icon: '🏔️' },
-            { id: 'classical', label: t('classicalPiano'), icon: '🎹' },
-            { id: 'nostalgia', label: t('goldenOldies'), icon: '📻' },
-            { id: 'nature', label: t('natureSounds'), icon: '🌿' },
-            { id: 'ambient', label: t('ambientComfort'), icon: '🕯️' },
+            { id: 'devotional', label: 'Devotional (देवा श्री गणेशा / अच्युतं केशवं)', icon: '🕉️' },
+            { id: 'bollywood', label: 'Bollywood (तू अगर मेरी)', icon: '🪷' },
+            { id: 'pop', label: 'Pop (Shape of You)', icon: '✨' },
+            { id: 'northeast', label: 'Assamese Melodies (কাৰ পৰশ)', icon: '🏔️' },
             { id: 'custom', label: t('myUploadedSongs'), icon: '⭐' },
             { id: 'favorites', label: t('myFavorites'), icon: '❤️' },
           ].map((cat) => (

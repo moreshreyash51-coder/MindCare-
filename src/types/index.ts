@@ -298,10 +298,12 @@ export interface CaregiverObservation {
 }
 
 export type SongCategory =
+  | 'devotional'
   | 'bollywood'
   | 'northeast'
   | 'classical'
   | 'nostalgia'
+  | 'pop'
   | 'nature'
   | 'ambient'
   | 'custom';
@@ -317,6 +319,7 @@ export interface SongTrack {
   coverImage: string;
   eraOrMood: string;
   description: string;
+  youtubeId?: string;
   synthesizedNotes?: { note: string; duration: number }[];
   isCustom?: boolean;
   isFavorite?: boolean;
@@ -331,5 +334,6 @@ export interface CustomSongInput {
   coverImage?: string;
   eraOrMood?: string;
   description?: string;
+  youtubeId?: string;
   patientId?: string;
 }

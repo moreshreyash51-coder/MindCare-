@@ -469,8 +469,10 @@ export const AddSongModal: React.FC<AddSongModalProps> = ({
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-200 text-sm font-semibold text-slate-900 bg-white"
               >
                 <option value="custom">{t('myUploadedSongs')}</option>
+                <option value="devotional">Sacred Devotional & Aarti (भजन / आरती)</option>
                 <option value="bollywood">{t('bollywoodClassics')}</option>
                 <option value="northeast">{t('northEastSongs')}</option>
+                <option value="pop">Upbeat & Joyful Melodies</option>
                 <option value="nostalgia">{t('goldenOldies')}</option>
                 <option value="classical">{t('classicalPiano')}</option>
                 <option value="nature">{t('natureSounds')}</option>
