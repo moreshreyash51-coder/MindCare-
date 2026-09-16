@@ -81,40 +81,7 @@ docker compose up -d
 
 ---
 
-## ☁️ Cloud Deployment Guides
 
-### 1. Vercel (Full-Stack Frontend + Backend Serverless)
-MindCare is configured for direct 1-click Vercel deployment with preconfigured `vercel.json` and serverless API handlers in `/api`:
-1. Push this repository to GitHub, GitLab, or Bitbucket.
-2. In Vercel, click **Add New Project** and import your repository.
-3. Vercel automatically detects the build configuration:
-   - **Framework Preset**: Vite
-   - **Build Command**: `vite build`
-   - **Output Directory**: `dist`
-4. *(Optional)* Under **Environment Variables**, add:
-   - `GEMINI_API_KEY`: Your Google Gemini API key (for AI voice, chat, vision)
-   - `MONGODB_URI`: Your MongoDB Atlas URI (if omitted, runs on built-in resilient datastore)
-   - `JWT_SECRET`: Any random secure string (defaults to built-in fallback)
-5. Click **Deploy**! Your entire frontend, SPA routing, and backend API endpoints (`/api/*`) are live instantly with zero configuration errors.
-
-### 2. Google Cloud Run
-MindCare is packaged with a multi-stage `Dockerfile` and listens on `0.0.0.0:${PORT}`:
-```bash
-gcloud run deploy mindcare \
-  --source . \
-  --platform managed \
-  --region us-central1 \
-  --allow-unauthenticated \
-  --port 3000
-```
-
-
-
----
-
-
-
----
 
 ## 🛠 Available Terminal Scripts
 
