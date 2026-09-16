@@ -108,32 +108,11 @@ gcloud run deploy mindcare \
   --port 3000
 ```
 
-### 3. Render / Railway
-- **Build Command**: `npm install && npm run build`
-- **Start Command**: `npm start`
-- **Health Check Path**: `/api/health`
-- **Port**: Automatic (MindCare reads `process.env.PORT`)
+
 
 ---
 
-## ⚙️ Environment Variables (Optional)
 
-Create a `.env` file in the root directory if you want to enable external MongoDB or Gemini AI capabilities:
-
-```env
-# Optional: Google Gemini API key for AI assistant features (Voice Chat, Photo Recall)
-GEMINI_API_KEY=""
-
-# Optional: MongoDB connection URI (e.g. MongoDB Atlas or local mongod)
-# If omitted, MindCare uses the built-in resilient datastore automatically.
-MONGODB_URI="mongodb://localhost:27017/mindcare"
-
-# Optional: JWT Secret for session authentication
-JWT_SECRET="mindcare_super_secret_jwt_key_2026"
-
-# Optional: Port override (defaults to 3000)
-PORT=3000
-```
 
 ---
 
